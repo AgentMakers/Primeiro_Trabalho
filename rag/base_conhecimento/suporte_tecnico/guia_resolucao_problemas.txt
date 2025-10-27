@@ -1,0 +1,211 @@
+GUIA DE RESOLUÇÃO DE PROBLEMAS - SUPORTE TÉCNICO TI
+
+=== PROBLEMAS DE REDE ===
+
+PROBLEMA: Sem conexão com a internet
+DIAGNÓSTICO:
+1. Verificar se o cabo de rede está conectado
+2. Checar se o LED do adaptador de rede está piscando
+3. Executar comando: ipconfig /all (Windows) ou ifconfig (Linux/Mac)
+4. Verificar se há endereço IP atribuído
+
+SOLUÇÕES:
+- Se não há IP: Executar ipconfig /release e ipconfig /renew
+- Se cabo desconectado: Reconectar firmemente
+- Se problema persistir: Reiniciar o roteador (desligar 30 segundos, ligar novamente)
+- Verificar configurações de firewall que possam bloquear conexão
+
+PRAZO: 90% dos casos resolvidos em até 15 minutos
+
+---
+
+PROBLEMA: Conexão lenta ou intermitente
+DIAGNÓSTICO:
+1. Testar velocidade com speedtest.net
+2. Verificar quantos dispositivos estão conectados
+3. Checar uso de banda com Task Manager (Ctrl+Shift+Esc > Performance > Network)
+
+SOLUÇÕES:
+- Conectar cabo ethernet ao invés de Wi-Fi quando possível
+- Aproximar dispositivo do roteador ou usar repetidor
+- Limitar downloads/uploads em segundo plano
+- Atualizar drivers de rede: Device Manager > Network adapters > Update driver
+- Alterar canal do Wi-Fi no painel do roteador (recomendado: canais 1, 6 ou 11)
+
+PRAZO: Resolução em até 30 minutos
+
+=== PROBLEMAS DE SOFTWARE ===
+
+PROBLEMA: Aplicativo não abre ou trava
+DIAGNÓSTICO:
+1. Verificar se há mensagem de erro específica
+2. Checar Task Manager se o processo está em execução
+3. Verificar logs de eventos: Event Viewer > Windows Logs > Application
+
+SOLUÇÕES:
+- Finalizar processo: Task Manager > Processes > End Task
+- Reiniciar computador
+- Reparar instalação: Settings > Apps > [App] > Advanced options > Repair
+- Reinstalar aplicativo se reparação não funcionar
+- Verificar compatibilidade: Propriedades > Compatibility
+
+PRAZO: 80% resolvidos em até 20 minutos
+
+---
+
+PROBLEMA: Erro "DLL missing" ou "Application error"
+DIAGNÓSTICO:
+1. Anotar nome exato da DLL ou código de erro
+2. Verificar data da última atualização do Windows
+
+SOLUÇÕES:
+- Executar Windows Update completamente
+- Instalar Visual C++ Redistributables (todas versões: 2010, 2013, 2015-2022)
+- Executar sfc /scannow em CMD administrativo
+- Baixar DLL específica apenas de sites oficiais (microsoft.com)
+- Reinstalar aplicativo problemático
+
+PRAZO: Resolução em até 45 minutos
+
+=== PROBLEMAS DE HARDWARE ===
+
+PROBLEMA: Computador não liga
+DIAGNÓSTICO:
+1. Verificar se há energia na tomada (testar com outro aparelho)
+2. Checar se LED de energia acende
+3. Ouvir se há bipes ao ligar
+
+SOLUÇÕES:
+- Verificar se cabo de energia está bem conectado
+- Testar em outra tomada
+- Desktop: Abrir gabinete e verificar conexões internas
+- Laptop: Remover bateria, segurar botão power 30s, reconectar bateria
+- Se há bipes: Consultar manual da placa-mãe para código de erro
+
+ESCALAR PARA: Técnico de hardware se soluções básicas não funcionarem
+PRAZO: Diagnóstico inicial em 10 minutos
+
+---
+
+PROBLEMA: Tela azul (BSOD - Blue Screen of Death)
+DIAGNÓSTICO:
+1. Anotar código de erro (ex: DRIVER_IRQL_NOT_LESS_OR_EQUAL)
+2. Verificar se ocorre ao usar programa específico
+3. Checar Event Viewer > Windows Logs > System
+
+SOLUÇÕES:
+- Atualizar todos os drivers (especialmente GPU e chipset)
+- Executar Windows Memory Diagnostic: Windows + R > mdsched.exe
+- Verificar temperatura: Download HWMonitor (CPU não deve passar 85°C)
+- Desinstalar atualizações recentes se problema começou após update
+- Executar CHKDSK: cmd administrativo > chkdsk C: /f /r
+
+PRAZO: Diagnóstico completo em até 1 hora
+ESCALAR: Se problema persistir após 3 tentativas
+
+=== PROBLEMAS DE EMAIL ===
+
+PROBLEMA: Não consigo enviar emails
+DIAGNÓSTICO:
+1. Verificar se consegue receber emails
+2. Checar configurações de SMTP
+3. Verificar se há mensagem de erro específica
+
+SOLUÇÕES:
+- Confirmar configurações SMTP corretas:
+  * Gmail: smtp.gmail.com porta 587 (TLS) ou 465 (SSL)
+  * Outlook: smtp-mail.outlook.com porta 587
+  * Corporativo: Verificar com TI interno
+- Verificar se autenticação de dois fatores está ativa (pode precisar de senha de app)
+- Desabilitar temporariamente antivírus para testar
+- Verificar tamanho dos anexos (limite geralmente 25MB)
+- Limpar pasta Itens Enviados se estiver muito cheia
+
+PRAZO: Resolução em até 25 minutos
+
+---
+
+PROBLEMA: Emails vão para spam
+DIAGNÓSTICO:
+1. Verificar se domínio está em blacklist (mxtoolbox.com/blacklists)
+2. Checar configurações SPF, DKIM e DMARC
+
+SOLUÇÕES:
+- Pedir aos destinatários para marcar como "não spam"
+- Verificar conteúdo do email (evitar palavras-gatilho como "grátis", "promoção")
+- Configurar SPF record no DNS do domínio
+- Implementar DKIM para autenticação
+- Evitar anexos muito grandes ou suspeitos
+
+PRAZO: Configuração DNS pode levar até 48h para propagar
+ESCALAR PARA: Administrador de sistemas para configurações de DNS
+
+=== PROBLEMAS DE IMPRESSORA ===
+
+PROBLEMA: Impressora não imprime
+DIAGNÓSTICO:
+1. Verificar se impressora está ligada e com papel
+2. Checar fila de impressão: Settings > Devices > Printers
+3. Verificar se há luz de erro piscando
+
+SOLUÇÕES:
+- Cancelar todas impressões pendentes
+- Reiniciar impressora e computador
+- Definir como impressora padrão: Settings > Printers > Set as default
+- Executar troubleshooter: Settings > Update & Security > Troubleshoot > Printer
+- Reinstalar driver: Remover impressora, baixar driver atualizado do site fabricante
+- Verificar conexão USB ou rede
+
+PRAZO: 85% resolvidos em 15 minutos
+
+=== SENHAS E ACESSO ===
+
+PROBLEMA: Esqueci minha senha
+SOLUÇÕES:
+- Windows: Usar disco de reset ou conta Microsoft para redefinir
+- Email corporativo: Solicitar reset através do portal self-service
+- Aplicativos: Usar opção "Esqueci minha senha" na tela de login
+- NUNCA compartilhar senha com suporte por telefone/email
+
+PRAZO: Reset imediato através de email ou SMS
+POLÍTICA: Senhas devem ter mínimo 8 caracteres, letras maiúsculas, minúsculas e números
+
+=== BACKUP E RECUPERAÇÃO ===
+
+PROBLEMA: Perdi arquivos importantes
+SOLUÇÕES IMEDIATAS:
+- Verificar Lixeira do Windows
+- Checar OneDrive/Google Drive se sincronização estava ativa
+- Restaurar versões anteriores: Clique direito no arquivo/pasta > Restore previous versions
+- Verificar backup em nuvem: OneDrive > Settings > Backup
+
+PREVENÇÃO:
+- Ativar File History: Settings > Update & Security > Backup
+- Configurar backup automático em nuvem (OneDrive, Google Drive, Dropbox)
+- Regra 3-2-1: 3 cópias dos dados, 2 tipos de mídia diferentes, 1 off-site
+
+RECUPERAÇÃO PROFISSIONAL: Se dados críticos, não mexer mais e escalar para especialista em recuperação
+
+=== INFORMAÇÕES DE CONTATO ===
+
+Suporte Nível 1: Problemas básicos (senha, instalação, configuração)
+Tempo de resposta: Até 2 horas em horário comercial
+
+Suporte Nível 2: Problemas intermediários (rede, drivers, software)
+Tempo de resposta: Até 4 horas em horário comercial
+
+Suporte Nível 3: Problemas complexos (servidores, infraestrutura)
+Tempo de resposta: Até 8 horas ou conforme SLA
+
+EMERGÊNCIAS: Linha direta 24/7 para problemas críticos que afetam operação
+
+=== PREVENÇÃO ===
+
+MANUTENÇÃO RECOMENDADA:
+- Executar Windows Update mensalmente
+- Limpar arquivos temporários: Disk Cleanup
+- Verificar saúde do disco: cmd > wmic diskdrive get status
+- Atualizar drivers trimestralmente
+- Fazer backup semanal de dados importantes
+- Executar antivírus completo mensalmente
+- Limpar fisicamente computador (poeira) semestralmente

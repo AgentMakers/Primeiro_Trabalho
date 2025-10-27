@@ -1,0 +1,284 @@
+PROCEDIMENTOS DE SEGURANÇA DA INFORMAÇÃO
+
+=== POLÍTICAS DE SENHA ===
+
+REQUISITOS MÍNIMOS:
+- Mínimo 12 caracteres para contas administrativas
+- Mínimo 8 caracteres para contas de usuário
+- Pelo menos 1 letra maiúscula
+- Pelo menos 1 letra minúscula
+- Pelo menos 1 número
+- Pelo menos 1 caractere especial (@, #, $, %, etc.)
+- Não pode conter nome do usuário ou empresa
+- Não pode ser uma das 10 últimas senhas utilizadas
+
+RENOVAÇÃO:
+- Senhas administrativas: A cada 60 dias
+- Senhas de usuário: A cada 90 dias
+- Senhas de serviço: Anualmente
+- Aviso enviado 7 dias antes do vencimento
+
+BLOQUEIO DE CONTA:
+- Após 5 tentativas incorretas consecutivas
+- Conta bloqueada por 30 minutos
+- Após 3 bloqueios no mesmo dia: Bloqueio até liberação manual
+- Reset de senha requer verificação de identidade (2 fatores)
+
+BOAS PRÁTICAS:
+- NUNCA compartilhar senhas
+- NUNCA escrever senhas em papel ou arquivos
+- Usar gerenciador de senhas corporativo (LastPass, 1Password)
+- Ativar autenticação de dois fatores (2FA) sempre que possível
+- Não usar mesma senha em múltiplos sistemas
+
+=== AUTENTICAÇÃO DE DOIS FATORES (2FA) ===
+
+OBRIGATÓRIO PARA:
+- Acesso VPN
+- Email corporativo externo
+- Sistemas financeiros
+- Acesso administrativo
+- Acesso remoto a servidores
+
+MÉTODOS ACEITOS:
+1. Aplicativo autenticador (Google Authenticator, Microsoft Authenticator) - RECOMENDADO
+2. Token físico (YubiKey)
+3. SMS (apenas se outras opções indisponíveis)
+4. Código de backup (uso único, emergencial)
+
+CONFIGURAÇÃO:
+- Acessar portal.empresa.com/security
+- Selecionar "Configurar 2FA"
+- Seguir instruções do assistente
+- Guardar códigos de backup em local seguro
+- Testar antes de fechar sessão atual
+
+=== PHISHING E ENGENHARIA SOCIAL ===
+
+SINAIS DE PHISHING:
+- Remetente desconhecido ou suspeito
+- Erros de português ou formatação estranha
+- Solicitação urgente de dados pessoais ou senha
+- Links que não correspondem ao domínio oficial
+- Anexos inesperados (.exe, .zip, .scr)
+- Ameaças ou promessas boas demais
+
+PROCEDIMENTO AO RECEBER EMAIL SUSPEITO:
+1. NÃO clicar em links ou baixar anexos
+2. NÃO responder ao email
+3. Verificar cabeçalho completo do email (mostrar original)
+4. Reportar para security@empresa.com
+5. Deletar o email após reportar
+
+TESTE DE LINKS SUSPEITOS:
+- Passar mouse sobre link sem clicar (verificar URL real)
+- Usar serviços de verificação: VirusTotal, URLScan
+- Digitar URL manualmente ao invés de clicar
+- Verificar se site usa HTTPS (cadeado no navegador)
+
+LIGAÇÕES SUSPEITAS:
+- Nunca fornecer senha por telefone
+- Confirmar identidade de quem liga (nome completo, departamento, ramal)
+- Retornar ligação usando número oficial da empresa
+- Reportar tentativas de engenharia social para Segurança
+
+=== MALWARE E ANTIVÍRUS ===
+
+ANTIVÍRUS CORPORATIVO:
+- Software: [Nome do antivírus da empresa]
+- Atualização automática: Diária
+- Scan completo: Toda sexta-feira às 18h
+- PROIBIDO desinstalar ou desabilitar
+
+SINAIS DE INFECÇÃO:
+- Computador muito lento sem razão aparente
+- Popups frequentes e inesperados
+- Arquivos desaparecendo ou corrompidos
+- Programas abrindo sozinhos
+- Atividade de rede suspeita
+- Antivírus desabilitado sem permissão
+
+PROCEDIMENTO AO SUSPEITAR DE MALWARE:
+1. Desconectar da rede (cabo ethernet ou Wi-Fi)
+2. NÃO desligar o computador
+3. Contatar TI imediatamente: ramal 4444
+4. Não acessar sistemas críticos ou financeiros
+5. Anotar comportamentos estranhos observados
+6. Aguardar orientação da equipe de segurança
+
+RANSOMWARE - PROCEDIMENTO DE EMERGÊNCIA:
+1. Desligar computador IMEDIATAMENTE
+2. Não pagar resgate
+3. Contatar TI: ramal 4444 ou celular emergência
+4. Isolar equipamento da rede
+5. Listar arquivos afetados
+6. TI restaurará de backup
+
+PREVENÇÃO:
+- Manter Windows Update ativo
+- Não baixar softwares de fontes não confiáveis
+- Não usar pendrives desconhecidos
+- Evitar sites de download pirata
+- Verificar arquivos com antivírus antes de abrir
+
+=== NAVEGAÇÃO SEGURA ===
+
+SITES PERMITIDOS:
+- Sites corporativos e parceiros
+- Sites educacionais (.edu)
+- Sites governamentais (.gov)
+- Sites de notícias reconhecidos
+- LinkedIn, GitHub (para fins profissionais)
+
+SITES BLOQUEADOS:
+- Redes sociais pessoais (Facebook, Instagram) exceto em horários específicos
+- Sites de streaming de vídeo
+- Sites de jogos online
+- Sites de conteúdo adulto
+- Sites de download P2P ou torrent
+
+COOKIES E RASTREAMENTO:
+- Limpar cookies mensalmente
+- Bloquear cookies de terceiros: Settings > Privacy > Cookies
+- Usar modo anônimo para testes (Ctrl+Shift+N no Chrome)
+- Não salvar senhas no navegador de computadores compartilhados
+
+DOWNLOADS:
+- Apenas de sites oficiais dos fabricantes
+- Verificar assinatura digital do arquivo
+- Executar antivírus antes de abrir
+- Salvar em pasta designada (Downloads)
+- Não executar arquivos .exe, .bat, .scr de origem desconhecida
+
+=== ACESSO REMOTO E VPN ===
+
+VPN CORPORATIVA:
+- Obrigatória para qualquer acesso externo
+- Software: [Nome do cliente VPN]
+- Conexão automática ao detectar rede externa
+- NÃO usar para tráfego pessoal
+
+CONFIGURAÇÃO VPN:
+- Download: portal.empresa.com/vpn
+- Credenciais: Mesmas do login corporativo
+- 2FA obrigatório a cada conexão
+- Tempo máximo de sessão: 8 horas (reconexão necessária)
+
+TRABALHO REMOTO - SEGURANÇA:
+- Usar apenas equipamento corporativo
+- Conectar através de VPN
+- Não usar redes Wi-Fi públicas (café, aeroporto)
+- Se necessário usar Wi-Fi público: Sempre através de VPN
+- Bloquear tela ao se ausentar (Windows + L)
+- Não permitir que outras pessoas vejam a tela
+
+BYOD (Bring Your Own Device):
+- Apenas se cadastrado no MDM corporativo
+- Instalar certificado de segurança
+- Permitir gerenciamento remoto de TI
+- Aceitar wipe remoto em caso de perda/roubo
+- Separar dados pessoais de corporativos
+
+=== GESTÃO DE DADOS ===
+
+CLASSIFICAÇÃO DE DADOS:
+1. PÚBLICO: Pode ser compartilhado livremente
+2. INTERNO: Apenas para funcionários
+3. CONFIDENCIAL: Apenas equipes autorizadas
+4. RESTRITO: Apenas diretoria e compliance
+
+COMPARTILHAMENTO:
+- Público: Email, site corporativo
+- Interno: SharePoint, Teams, email interno
+- Confidencial: OneDrive criptografado, links com senha
+- Restrito: Apenas pessoalmente ou sistema específico
+
+PROIBIDO:
+- Enviar dados confidenciais para email pessoal
+- Usar pen drives não criptografados
+- Armazenar em nuvem pessoal (Dropbox pessoal, Google Drive pessoal)
+- Imprimir documentos confidenciais sem necessidade
+- Deixar documentos impressos na impressora
+
+DESCARTE DE DADOS:
+- Papel: Usar fragmentadora nível P-4 ou superior
+- HD/SSD: Formatação segura (mínimo 7 passes) ou destruição física
+- Pen drives: Criptografia antes do descarte
+- Smartphones/tablets: Factory reset + MDM wipe
+
+=== DISPOSITIVOS MÓVEIS ===
+
+SMARTPHONES CORPORATIVOS:
+- Pin/senha obrigatória (mínimo 6 dígitos)
+- Biometria recomendada
+- Bloqueio automático: 2 minutos
+- Criptografia ativada
+- Find My Device ativo
+
+POLÍTICAS:
+- Atualizar sistema operacional em até 7 dias após lançamento
+- Não fazer jailbreak ou root
+- Instalar apenas apps da loja oficial (Play Store, App Store)
+- Reportar perda/roubo IMEDIATAMENTE
+- Não conectar em computadores pessoais
+
+APLICATIVOS PERMITIDOS:
+- Email corporativo (Outlook)
+- Mensagens (Teams, Slack)
+- Autenticador (Microsoft Authenticator)
+- VPN corporativa
+- Apps de produtividade (Office 365)
+
+=== INCIDENTES DE SEGURANÇA ===
+
+REPORTAR IMEDIATAMENTE:
+- Perda ou roubo de equipamento
+- Acesso não autorizado à conta
+- Email ou mensagem suspeita recebida
+- Vazamento acidental de dados
+- Comportamento estranho do sistema
+- Solicitação suspeita de informações
+
+COMO REPORTAR:
+- Portal: security.empresa.com/incident
+- Email: security@empresa.com
+- Telefone emergência: 0800-XXX-XXXX (24/7)
+- Não tentar resolver sozinho se não tiver certeza
+
+TEMPO DE RESPOSTA:
+- Crítico (dados vazados, ransomware): Imediato
+- Alto (conta comprometida): Até 1 hora
+- Médio (phishing recebido): Até 4 horas
+- Baixo (dúvida de segurança): Até 24 horas
+
+=== COMPLIANCE E AUDITORIA ===
+
+MONITORAMENTO:
+- Logs de acesso são registrados e auditados
+- Tentativas de acesso não autorizado são investigadas
+- Downloads e uploads em horários atípicos são flagged
+- Uso de sistemas é auditado regularmente
+
+CONSEQUÊNCIAS DE VIOLAÇÃO:
+1ª Infração leve: Advertência verbal + treinamento
+2ª Infração leve: Advertência escrita
+Infração grave: Suspensão ou desligamento imediato
+Infração criminal: Encaminhamento legal
+
+TREINAMENTO:
+- Obrigatório para todos os funcionários: Anualmente
+- Novos funcionários: Primeira semana
+- Após incidente: Treinamento específico
+- Teste de phishing simulado: Trimestral
+
+=== CONTATOS DE EMERGÊNCIA ===
+
+Equipe de Segurança:
+- Email: security@empresa.com
+- Ramal: 4444
+- Emergência 24/7: 0800-XXX-XXXX
+
+TI Support:
+- Email: support@empresa.com
+- Ramal: 4000
+- Portal: helpdesk.empresa.com

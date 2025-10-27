@@ -44,6 +44,20 @@ load_dotenv()
 
 # Para rodar o sistema: streamlit run bot.py
 
+# ╔════════════════════════════════════════════════════════════════╗
+# ║ MÓDULO RAG (OPCIONAL - PLUG AND PLAY)                          ║
+# ╚════════════════════════════════════════════════════════════════╝
+
+_RAG_AVAILABLE = False
+#rag_instance = None
+
+try:
+    from rag.rag_module import create_rag_instance
+    from rag.rag_config import RAG_CONFIG, get_active_use_cases, format_rag_context
+    _RAG_AVAILABLE = True
+except ImportError:
+    RAG_CONFIG = {"enabled": False}
+
 
 # ╔════════════════════════════════════════════════════════════════╗
 # ║ ASSISTENTE DEFINIDO 100% NO CÓDIGO (sem RAG / sem arquivos)    ║
@@ -103,6 +117,33 @@ client = OpenAI(api_key=OPENAI_API_KEY)
 #     return "nano" in (model_name or "").lower()
 
 
+# SUGESTÃO DE CÓDIGO PARA CRIAR O CACHE:
+# CASO NÃO FUNCIONE, REMOVER ESSE TRECHO!!!
+@st.cache_resource
+def get_rag_instance():
+    """
+    Carrega a instância RAG uma única vez e a armazena em cache.
+    """
+    if not _RAG_AVAILABLE or not RAG_CONFIG.get("enabled", False):
+        return None
+    try:
+        # Este spinner só aparecerá na *primeira* carga do app
+        with st.spinner("🔧 Inicializando sistema RAG (cache)..."):
+            rag_instance = create_rag_instance(
+                knowledge_base_dir=RAG_CONFIG.get("knowledge_base_dir", "./base_conhecimento"),
+                verbose=False
+            )
+            return rag_instance
+    except Exception as e:
+        # Se falhar, mostrará o erro na sidebar
+        st.sidebar.error(f"Falha ao inicializar RAG: {e}")
+        return None
+
+# Inicializa e obtém a instância RAG do cache
+rag_instance = get_rag_instance()
+
+
+
 def call_llm(
     user_message: str,
     *,
@@ -132,9 +173,58 @@ def call_llm(
 
 
 def obter_mensagens_completas():
-    """Inclui o system message no início da lista de mensagens"""
+    """Inclui o system message + contexto RAG no início da lista de mensagens"""
     system_msg = {"role": "system", "content": prompt_sistema.strip()}
-    return [system_msg] + st.session_state["lista_mensagens"]
+
+    # ═══════════════════════════════════════════════════════
+    # INTEGRAÇÃO RAG - Busca contexto relevante automaticamente
+    # ═══════════════════════════════════════════════════════
+    if _RAG_AVAILABLE and rag_instance and st.session_state.get("rag_enabled", True):
+        try:
+            # Pega últimas mensagens do usuário para contexto
+            user_messages = [
+                m["content"] for m in st.session_state["lista_mensagens"][-6:]
+                if m["role"] == "user"
+            ]
+
+            if user_messages:
+                # Combina últimas mensagens como query
+                query = " ".join(user_messages[-1:])  # Últimas 2 mensagens
+
+                # Busca documentos relevantes
+                # category_filter = st.session_state.get("rag_category_filter")
+                docs = rag_instance.retrieve(
+                    query=query,
+                    top_k=st.session_state.get("rag_top_k", 3),
+                    score_threshold=st.session_state.get("rag_threshold", 0.5),
+                    # category_filter=category_filter
+                )
+
+                if docs:
+                    # Formata contexto usando a função do config
+                    contexto_rag = format_rag_context(docs)
+                    system_msg["content"] += contexto_rag
+
+                    # Salva para exibir na UI
+                    st.session_state["ultimo_contexto_rag"] = docs
+                else:
+                    st.session_state["ultimo_contexto_rag"] = []
+        except Exception as e:
+            if st.session_state.get("rag_show_errors", False):
+                st.sidebar.error(f"Erro no RAG: {e}")
+
+    # codigo original (removido para evitar o erro junto a OpenAI - substituido pelo codigo abaixo)
+    # return [system_msg] + st.session_state["lista_mensagens"]
+    
+    # Filtra o histórico de mensagens para enviar à API
+    # Isso remove as mensagens internas, como "rag_context"
+    api_messages = [
+        {"role": msg["role"], "content": msg["content"]}
+        for msg in st.session_state["lista_mensagens"]
+        if msg["role"] in ("user", "assistant")
+    ]
+
+    return [system_msg] + api_messages
 
 
 # ═══════════════════════════════════════════════════════
@@ -143,11 +233,38 @@ def obter_mensagens_completas():
 
 config = CONFIG
 prompt_sistema = SYSTEM_PROMPT
-# base_conhecimento = carregar_base_conhecimento()
+
+
+# Inicializa RAG se disponível
+#if _RAG_AVAILABLE and RAG_CONFIG.get("enabled", False):
+#    if rag_instance is None:
+#        with st.spinner("🔧 Inicializando sistema RAG..."):
+#            rag_instance = create_rag_instance(
+#                knowledge_base_dir=RAG_CONFIG.get("knowledge_base_dir", "./base_conhecimento"),
+#                verbose=False  # Logs no console, não no Streamlit
+#            )
+#
+
+# O código a seguir inicializa a instância RAG no session_state porém como o
+# cache já está funcionando, não é necessário.
+#if _RAG_AVAILABLE and RAG_CONFIG.get("enabled", False):
+#    # Verifica se a instância já existe no st.session_state
+#    if "rag_instance" not in st.session_state:
+#        with st.spinner("🔧 Inicializando sistema RAG..."):
+#            # Armazena a instância no session_state
+#            st.session_state["rag_instance"] = create_rag_instance(
+#                knowledge_base_dir=RAG_CONFIG.get("knowledge_base_dir", "./base_conhecimento"),
+#                verbose=False  # Logs no console, não no Streamlit
+#            )
+#    # Atribui a instância do cache à variável local para o restante do script usar
+#    rag_instance = st.session_state.get("rag_instance")            
 
 st.title("🧑‍💬 Analisador de Conversas ")
 st.write("---")
-st.caption(" • 🧠 Sentimento   • ☁️ WordCloud   • 🔗 Grafo de Palavras ")
+caption_parts = [" • 🧠 Sentimento   • ☁️ WordCloud   • 🔗 Grafo de Palavras "]
+if rag_instance:
+    caption_parts.append("  • 📚 RAG Ativo")
+st.caption("".join(caption_parts))
 
 
 # ──────────────────────────────────────────────────────────────
@@ -571,6 +688,76 @@ def show_grafo_modal():
 
 st.sidebar.title("⚙️ PAINEL DE CONTROLE")
 
+# ═══════════════════════════════════════════════════════
+# ─ RAG (Base de Conhecimento) – controles
+# ═══════════════════════════════════════════════════════
+# if rag_instance:
+if rag_instance:
+    st.sidebar.write("### 📚 Base de Conhecimento (RAG)")
+
+    col_rag1, col_rag2 = st.sidebar.columns(2)
+    with col_rag1:
+        st.metric("Documentos", rag_instance.count())
+    with col_rag2:
+        if "rag_enabled" not in st.session_state:
+            st.session_state["rag_enabled"] = True
+        st.session_state["rag_enabled"] = st.toggle(
+            "Ativar RAG",
+            value=st.session_state.get("rag_enabled", True),
+            key="rag_toggle"
+        )
+
+    # Seletor de caso de uso
+    if _RAG_AVAILABLE:
+        use_cases = get_active_use_cases()
+        use_case_options = {uc["name"]: uc["key"] for uc in use_cases}
+
+        selected_use_case_name = st.sidebar.selectbox(
+            "Caso de uso:",
+            options=list(use_case_options.keys()),
+            help="Filtra a base de conhecimento por contexto"
+        )
+        selected_use_case_key = use_case_options[selected_use_case_name]
+
+        # Armazena filtro de categoria
+        use_case_config = next((uc for uc in use_cases if uc["key"] == selected_use_case_key), None)
+        if use_case_config:
+            st.session_state["rag_category_filter"] = use_case_config.get("category_filter")
+
+    # Configurações avançadas (expander)
+    with st.sidebar.expander("⚙️ Configurações RAG"):
+        st.session_state["rag_top_k"] = st.slider(
+            "Documentos retornados", 1, 5, 2,
+            help="Quantos documentos usar como contexto"
+        )
+        st.session_state["rag_threshold"] = st.slider(
+            "Relevância mínima", 0.0, 1.0, 0.5, 0.1,
+            help="Score mínimo para considerar documento relevante"
+        )
+        st.session_state["rag_show_errors"] = st.checkbox("Mostrar erros", value=False)
+
+    # Mostra último contexto usado
+    if st.session_state.get("ultimo_contexto_rag"):
+        with st.sidebar.expander("🔍 Contexto usado na última resposta"):
+            for doc in st.session_state["ultimo_contexto_rag"]:
+                st.caption(f"**{doc['source']}** ({doc['score']:.1%})")
+                st.text(doc['text'][:150] + "...")
+
+    # Botão para recarregar base
+    col_r1, col_r2 = st.sidebar.columns(2)
+    with col_r1:
+        if st.button("🔄 Recarregar", width='stretch', key="rag_reload"):
+            rag_instance.clear()
+            rag_instance.load_documents(RAG_CONFIG.get("knowledge_base_dir"))
+            st.success("Base recarregada!")
+            st.rerun()
+    with col_r2:
+        stats = rag_instance.get_stats()
+        with st.popover("📊 Stats"):
+            st.json(stats)
+
+    st.sidebar.write("---")
+
 # ─ Sentimento – controles mínimos
 st.sidebar.write("### 🧠 Análise de Sentimento")
 sentimento_habilitado = st.sidebar.toggle(
@@ -590,7 +777,7 @@ with st.sidebar.container():
     _hist = st.session_state.get("sentiment_history", [])
     if _hist:
         _scores = [h.get("score", 0.0) for h in _hist]
-        st.line_chart(_scores, height=150, use_container_width=True)
+        st.line_chart(_scores, height=150, width='stretch')
         _last = _hist[-1]
         st.caption(
             f"Mensagens analisadas: {len(_scores)} | Último: {_last.get('label', '?')} ({int(float(_last.get('confidence', 0.0)) * 100)}%)"
@@ -605,7 +792,7 @@ wc_container = st.sidebar.container()
 
 col_wc1, col_wc2 = st.sidebar.columns(2)
 with col_wc1:
-    if st.button("🗑️ Limpar nuvem", use_container_width=True):
+    if st.button("🗑️ Limpar nuvem", width='stretch'):
         st.session_state["user_corpus_text"] = ""
         st.session_state["user_token_sequences"] = []
         st.rerun()
@@ -640,7 +827,7 @@ st.sidebar.write("---")
 st.sidebar.write("### 🛠️ Ações")
 col1, col2 = st.sidebar.columns(2)
 with col1:
-    if st.button("Limpar chat", use_container_width=True):
+    if st.button("Limpar chat", width='stretch'):
         st.session_state["lista_mensagens"] = []
         st.session_state["sentimento_atual"] = None
         st.session_state["user_corpus_text"] = ""
@@ -648,7 +835,7 @@ with col1:
         st.session_state["sentiment_history"] = []
         st.rerun()
 with col2:
-    if st.button("Recarregar", use_container_width=True):
+    if st.button("Recarregar", width='stretch'):
         st.cache_data.clear()
         st.rerun()
 
@@ -675,6 +862,16 @@ for msg in st.session_state["lista_mensagens"]:
         st.chat_message("user").write(msg["content"])
     elif msg["role"] == "assistant":
         st.chat_message("assistant").write(msg["content"])
+    elif msg["role"] == "rag_context":
+        # Mostra documentos RAG que foram usados nesta resposta
+        docs = msg.get("docs", [])
+        if docs:
+            with st.expander(f"📚 {len(docs)} documento(s) consultado(s) na base de conhecimento", expanded=False):
+                for i, doc in enumerate(docs, 1):
+                    st.markdown(f"**{i}. {doc['source']}** - Relevância: `{doc['score']:.1%}`")
+                    st.info(doc['text'][:300] + ("..." if len(doc['text']) > 300 else ""))
+                    if i < len(docs):
+                        st.divider()
     elif msg["role"] == "context":
         with st.expander("🔍 Contexto RAG utilizado"):
             st.text(msg["content"])
@@ -729,9 +926,12 @@ if mensagem_usuario:
     with st.chat_message("assistant"):  # , avatar="🤖"):
         with st.spinner("🤔 Pensando na resposta..."):
             try:
+                # Obtém mensagens completas (inclui busca RAG)
+                messages = obter_mensagens_completas()
+                
                 resposta = client.chat.completions.create(
                     model=modelo,
-                    messages=obter_mensagens_completas(),
+                    messages=messages,
                     temperature=temperatura,
                     max_tokens=max_tokens,
                     top_p=0.9,
@@ -743,6 +943,14 @@ if mensagem_usuario:
                 st.session_state["lista_mensagens"].append(
                     {"role": "assistant", "content": resposta_ia}
                 )
+
+                # Salva contexto RAG junto com a mensagem para histórico (se disponível)
+                docs_rag = st.session_state.get("ultimo_contexto_rag", [])
+                if docs_rag and st.session_state.get("rag_enabled", True):
+                    st.session_state["lista_mensagens"].append(
+                        {"role": "rag_context", "docs": docs_rag}
+                    )
+
                 # opcional: evita efeitos visuais residuais
                 st.rerun()
             except Exception as e:
@@ -796,13 +1004,13 @@ with wc_container:
     if err:
         st.info(err)
     elif buf:
-        st.image(buf, caption="Nuvem de Palavras do Usuário", use_container_width=True)
+        st.image(buf, caption="Nuvem de Palavras do Usuário", width='stretch')
         st.download_button(
             "📥 Baixar PNG",
             data=buf,
             file_name="wordcloud.png",
             mime="image/png",
-            use_container_width=True,
+            width='stretch',
         )
 
 with graph_container:
