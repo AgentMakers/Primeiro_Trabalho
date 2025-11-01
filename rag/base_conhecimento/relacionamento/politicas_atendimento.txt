@@ -1,0 +1,386 @@
+POLÍTICAS DE ATENDIMENTO AO CLIENTE
+
+=== PRINCÍPIOS FUNDAMENTAIS ===
+
+MISSÃO:
+Proporcionar experiência excepcional ao cliente, resolvendo solicitações com agilidade, empatia e profissionalismo, construindo relacionamentos duradouros baseados em confiança e satisfação mútua.
+
+VALORES:
+1. EMPATIA: Colocar-se no lugar do cliente, compreender suas necessidades
+2. AGILIDADE: Resolver problemas no menor tempo possível
+3. TRANSPARÊNCIA: Comunicação clara e honesta sobre prazos e possibilidades
+4. PROATIVIDADE: Antecipar necessidades e oferecer soluções
+5. EXCELÊNCIA: Buscar sempre a melhor solução, não apenas a mais rápida
+
+=== CANAIS DE ATENDIMENTO ===
+
+CHAT ONLINE:
+- Horário: Segunda a sexta, 8h às 20h | Sábados, 9h às 14h
+- Tempo médio de resposta: Até 3 minutos
+- Ideal para: Dúvidas rápidas, rastreamento, informações gerais
+
+TELEFONE:
+- Central: 0800-XXX-XXXX
+- WhatsApp Business: (11) XXXXX-XXXX
+- Horário: Segunda a sexta, 8h às 22h | Sábados, 9h às 18h
+- Tempo médio de espera: Até 5 minutos
+- Ideal para: Problemas complexos, negociações, urgências
+
+EMAIL:
+- Contato: atendimento@empresa.com
+- Tempo de resposta: Até 24 horas em dias úteis
+- Ideal para: Documentação, reclamações formais, sugestões
+
+REDES SOCIAIS:
+- Facebook, Instagram, Twitter: @empresaoficial
+- Resposta: Até 2 horas em horário comercial
+- Ideal para: Dúvidas públicas, feedback, engajamento
+
+PRESENCIAL:
+- Lojas físicas: Consultar endereços em www.empresa.com/lojas
+- Horário: Segunda a sexta, 10h às 19h | Sábados, 10h às 16h
+- Agendamento recomendado para serviços especializados
+
+=== NÍVEIS DE ATENDIMENTO (SLA) ===
+
+NÍVEL 1 - INFORMAÇÕES GERAIS:
+- Horário de funcionamento
+- Formas de pagamento
+- Rastreamento de pedido
+- Consulta de produtos
+Tempo de resolução: Imediato
+
+NÍVEL 2 - SOLICITAÇÕES SIMPLES:
+- Alteração de dados cadastrais
+- Cancelamento de pedido (antes do envio)
+- Segunda via de boleto
+- Atualização de endereço
+Tempo de resolução: Até 2 horas
+
+NÍVEL 3 - SOLICITAÇÕES COMPLEXAS:
+- Trocas e devoluções
+- Problemas com entrega
+- Reclamações de produto defeituoso
+- Negociação de débitos
+Tempo de resolução: Até 48 horas
+
+NÍVEL 4 - CASOS ESPECIAIS:
+- Processos judiciais
+- Reclamações em órgãos de defesa (Procon, Reclame Aqui)
+- Problemas com grande repercussão
+- VIPs e clientes enterprise
+Tempo de resolução: Até 24 horas (prioridade máxima)
+
+=== SCRIPTS E ABORDAGENS ===
+
+ABERTURA DE ATENDIMENTO:
+"Olá, [nome do cliente]! Meu nome é [seu nome] e estou aqui para ajudá-lo(a). Como posso tornar seu dia melhor?"
+
+IDENTIFICAÇÃO:
+- Nome completo
+- CPF ou número do pedido
+- Email cadastrado
+- Telefone de contato
+
+ESCUTA ATIVA:
+- Deixar o cliente explicar completamente antes de interromper
+- Fazer perguntas clarificadoras: "Entendi corretamente que...?"
+- Demonstrar empatia: "Compreendo sua frustração e vou resolver isso"
+- Anotar todos os detalhes importantes
+
+RESOLUÇÃO:
+- Explicar claramente as opções disponíveis
+- Dar autonomia ao cliente para escolher
+- Informar prazos realistas (nunca prometer o que não pode cumprir)
+- Confirmar entendimento: "Ficou claro? Tem alguma dúvida?"
+
+ENCERRAMENTO:
+"Consegui resolver tudo para você, [nome]? Há mais alguma coisa em que posso ajudá-lo(a) hoje? Obrigado(a) pelo contato e conte sempre conosco!"
+
+PESQUISA DE SATISFAÇÃO:
+- Enviar automaticamente após 2 horas do atendimento
+- NPS (Net Promoter Score): "De 0 a 10, quanto você recomendaria nossa empresa?"
+- Comentários abertos para feedback qualitativo
+
+=== POLÍTICA DE TROCAS E DEVOLUÇÕES ===
+
+DIREITO DE ARREPENDIMENTO (CDC):
+- Prazo: 7 dias corridos a partir do recebimento
+- Aplica-se a: Compras online ou telefone
+- Condição: Produto sem uso, embalagem original
+- Reembolso: 100% do valor pago, incluindo frete de ida
+- Prazo de reembolso: Até 10 dias úteis após recebermos o produto
+- Frete de devolução: Por conta da empresa (enviamos etiqueta reversa)
+
+TROCA POR DEFEITO:
+- Prazo: 90 dias para defeito de fabricação
+- Condição: Produto apresentar mal funcionamento
+- Procedimento:
+  1. Cliente reporta defeito (foto/vídeo se possível)
+  2. Enviamos etiqueta de postagem (frete grátis)
+  3. Recebemos e analisamos (até 7 dias úteis)
+  4. Enviamos novo produto ou reembolsamos integralmente
+- Se mesmo produto indisponível: Cliente pode escolher outro de valor equivalente ou superior (pagando diferença)
+
+TROCA POR TAMANHO/COR:
+- Prazo: 30 dias após recebimento
+- Primeira troca: Frete grátis
+- Segunda troca em diante: Cliente paga frete
+- Condição: Produto sem uso, etiquetas preservadas
+- Disponibilidade: Sujeito a estoque do item desejado
+
+PRODUTOS NÃO TROCÁVEIS:
+- Produtos personalizados sob encomenda
+- Itens de higiene pessoal abertos
+- Roupas íntimas (exceto se defeito de fabricação)
+- Produtos em promoção "liquidação final" (informado claramente na compra)
+- Alimentos perecíveis
+
+DANO NO TRANSPORTE:
+- Cliente deve recusar recebimento se embalagem visivelmente danificada
+- Se dano detectado após abertura: Fotografar e reportar em até 48 horas
+- Transportadora analisará caso
+- Se procedente: Novo envio sem custo ou reembolso integral
+
+=== POLÍTICA DE CANCELAMENTO ===
+
+PEDIDO AINDA NÃO ENVIADO:
+- Cancelamento: Imediato e sem custo
+- Reembolso: Até 7 dias úteis (mesmo meio de pagamento)
+- Procedimento: Solicitar por qualquer canal de atendimento
+
+PEDIDO JÁ ENVIADO:
+- Opção 1: Aguardar recebimento e usar direito de arrependimento
+- Opção 2: Recusar recebimento na entrega (correios devolverá automaticamente)
+- Reembolso após devolução: Até 10 dias úteis
+
+PEDIDO RECORRENTE/ASSINATURA:
+- Cancelamento: Até 3 dias antes da próxima cobrança
+- Sem multa ou taxa de cancelamento
+- Permanência de benefícios até fim do período pago
+- Reativação: Possível a qualquer momento (condições vigentes)
+
+=== POLÍTICA DE REEMBOLSO ===
+
+FORMAS DE REEMBOLSO:
+- Cartão de crédito: Estorno na fatura (1 a 2 ciclos)
+- Cartão de débito/PIX: Depósito na conta (até 10 dias úteis)
+- Boleto: Depósito bancário informando dados (até 10 dias úteis)
+- Vale-compra: Disponível imediatamente (com 10% de bônus)
+
+REEMBOLSO PARCIAL:
+- Aplicável quando apenas parte do pedido tem problema
+- Proporcional ao item defeituoso ou não entregue
+- Cliente pode escolher entre: reembolso parcial OU reenvio do item
+
+REEMBOLSO TOTAL:
+- Quando produto não pode ser substituído
+- Quando cliente prefere não receber substituição
+- Inclui: valor do produto + frete pago (se aplicável)
+
+BONIFICAÇÕES:
+- Em caso de transtorno significativo: Vale-compra adicional
+- Atraso na entrega (mais de 10 dias além do prazo): 10% de desconto na próxima compra
+- Defeito recorrente: 20% de vale-compra adicional
+
+=== POLÍTICA DE ENTREGA ===
+
+PRAZOS:
+- Capitais: 3 a 7 dias úteis
+- Interior: 5 a 12 dias úteis
+- Áreas remotas: 10 a 20 dias úteis
+- Prazo inicia após confirmação de pagamento
+- Pedidos aprovados até 17h: Enviados no mesmo dia
+
+FRETE GRÁTIS:
+- Compras acima de R$ 199,00 para Sul e Sudeste
+- Compras acima de R$ 299,00 para demais regiões
+- Membros do programa fidelidade: Frete grátis sempre
+
+RASTREAMENTO:
+- Código enviado por email/SMS após postagem
+- Acompanhamento: www.empresa.com/rastreamento
+- Atualizações automáticas por WhatsApp (se cliente optou)
+
+PROBLEMA NA ENTREGA:
+- Atraso além do prazo: Contatar para verificar status
+- Produto não chegou: Após prazo + 5 dias, acionamos transportadora
+- Endereço incorreto: Cliente pode redirecionar (custo adicional) ou recusar e receber reembolso
+
+TENTATIVAS DE ENTREGA:
+- Transportadora faz até 3 tentativas
+- Avisos deixados em caso de ausência
+- Após 3 tentativas: Produto retorna (cliente pode solicitar reenvio pagando frete)
+- Recomendação: Indicar endereço onde há sempre alguém (trabalho, portaria)
+
+=== POLÍTICA DE GARANTIA ===
+
+GARANTIA LEGAL (CDC):
+- 30 dias para produtos não duráveis
+- 90 dias para produtos duráveis
+- Conta a partir do recebimento
+- Cobre defeitos de fabricação e funcionamento
+
+GARANTIA ESTENDIDA (Opcional):
+- 12 meses adicionais à garantia legal
+- Cobertura ampliada (acidentes, queda, líquidos)*
+- Suporte técnico prioritário
+- Produto reserva durante conserto
+- Custo: 10% a 15% do valor do produto
+*Verificar termos específicos no certificado
+
+ACIONAMENTO DE GARANTIA:
+1. Contatar atendimento informando defeito
+2. Enviar fotos/vídeos do problema (se aplicável)
+3. Receber autorização e etiqueta de envio
+4. Enviar produto (frete por nossa conta)
+5. Análise técnica (até 7 dias úteis)
+6. Reparo ou troca (até 30 dias corridos máximo)
+
+GARANTIA NÃO COBRE:
+- Mau uso ou acidentes (se não tiver garantia estendida)
+- Desgaste natural
+- Reparos por terceiros não autorizados
+- Violação de lacres ou modificações
+- Uso comercial/industrial de produto doméstico
+
+=== POLÍTICA DE PRIVACIDADE ===
+
+DADOS COLETADOS:
+- Informações de cadastro (nome, CPF, email, telefone)
+- Endereço de entrega e cobrança
+- Histórico de compras e navegação
+- Informações de pagamento (criptografadas)
+- Interações com atendimento (para melhoria)
+
+USO DOS DADOS:
+- Processar pedidos e entregas
+- Comunicação sobre pedidos
+- Ofertas personalizadas (se cliente autorizar)
+- Melhorias no serviço
+- Cumprimento de obrigações legais
+
+COMPARTILHAMENTO:
+- Transportadoras (apenas dados de entrega)
+- Processadores de pagamento (apenas dados necessários)
+- NUNCA vendemos dados a terceiros
+- NUNCA compartilhamos com fins de marketing sem autorização
+
+DIREITOS DO CLIENTE (LGPD):
+- Acessar seus dados
+- Corrigir dados incorretos
+- Solicitar exclusão (exceto quando houver obrigação legal de manter)
+- Revogar consentimento de marketing
+- Portabilidade de dados
+
+SEGURANÇA:
+- Criptografia SSL em todas as transações
+- Dados de pagamento não armazenados (tokenização)
+- Acesso restrito a dados sensíveis
+- Auditoria regular de segurança
+
+=== PROGRAMA DE FIDELIDADE ===
+
+MEMBROS BRONZE (Gratuito):
+- Pontos em todas as compras (1 ponto = R$ 1,00)
+- Acesso antecipado a promoções
+- Desconto de aniversário (10%)
+
+MEMBROS PRATA (R$ 9,90/mês):
+- Tudo do Bronze +
+- Frete grátis ilimitado
+- 5% de desconto em todas as compras
+- Troca facilitada (até 60 dias)
+
+MEMBROS OURO (R$ 19,90/mês):
+- Tudo do Prata +
+- 10% de desconto em todas as compras
+- Atendimento prioritário (fila preferencial)
+- Brindes exclusivos
+- Eventos VIP
+
+RESGATE DE PONTOS:
+- 1000 pontos = R$ 50,00 de desconto
+- Validade: 12 meses a partir do acúmulo
+- Acúmulo e resgate: Pelo app ou site
+
+=== RECLAMAÇÕES E OUVIDORIA ===
+
+CANAIS FORMAIS:
+- Reclame Aqui: www.reclameaqui.com.br
+- Procon: www.procon.sp.gov.br
+- Consumidor.gov: www.consumidor.gov.br
+- Ouvidoria interna: ouvidoria@empresa.com
+
+COMPROMISSO:
+- Resposta em até 48 horas
+- Resolução em até 7 dias úteis
+- Prioridade máxima para casos escalados
+
+MEDIAÇÃO:
+- Tentaremos sempre resolver amigavelmente
+- Oferecemos soluções justas e adequadas
+- Buscamos aprender com cada reclamação
+
+=== CÓDIGO DE CONDUTA DO ATENDENTE ===
+
+SEMPRE:
+✓ Tratar o cliente pelo nome
+✓ Usar linguagem clara e educada
+✓ Pedir desculpas quando a empresa errar
+✓ Manter calma mesmo com cliente alterado
+✓ Registrar tudo no sistema
+✓ Seguir até a resolução completa
+✓ Oferecer alternativas
+
+NUNCA:
+✗ Discutir ou ser rude com cliente
+✗ Prometer o que não pode cumprir
+✗ Culpar outros departamentos
+✗ Deixar cliente sem resposta
+✗ Pedir dados sensíveis por canais inseguros
+✗ Compartilhar informações de outros clientes
+✗ Desligar chamada abruptamente
+
+=== INDICADORES DE PERFORMANCE ===
+
+KPIs PRINCIPAIS:
+- Tempo Médio de Atendimento (TMA): Meta 8 minutos
+- First Call Resolution (FCR): Meta 80%
+- Net Promoter Score (NPS): Meta +50
+- Customer Satisfaction (CSAT): Meta 90%
+- Tempo de Espera: Meta até 5 minutos
+
+METAS INDIVIDUAIS:
+- 95% de satisfação nas avaliações
+- Máximo 2% de transferências
+- Seguir script em 90% dos atendimentos
+- Zero reclamações de conduta
+
+RECONHECIMENTO:
+- Atendente do mês: Melhor NPS
+- Bônus por metas atingidas
+- Feedback positivo reconhecido publicamente
+- Plano de carreira baseado em performance
+
+=== TREINAMENTO CONTÍNUO ===
+
+INICIAL (Obrigatório):
+- 40 horas de treinamento antes de atender
+- Conhecimento de produtos
+- Sistemas e ferramentas
+- Políticas e procedimentos
+- Simulações de atendimento
+
+CONTÍNUO:
+- Reciclagem trimestral (8 horas)
+- Novos produtos e promoções
+- Feedback de performance
+- Técnicas de atendimento
+- Cases de sucesso e aprendizados
+
+ESPECIALIZAÇÃO:
+- Atendimento de luxo (clientes VIP)
+- Negociação de conflitos
+- Vendas e upsell
+- Liderança e mentoria
