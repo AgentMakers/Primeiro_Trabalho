@@ -229,6 +229,9 @@ def check_documentation():
         else:
             print(check_color(f"{doc:30} - {description}", "warning"))
 
+    # Retorna True para indicar que a checagem foi executada (não é crítica)
+    return True
+
 
 def test_import_rag():
     """Tenta importar módulos RAG"""
@@ -237,12 +240,13 @@ def test_import_rag():
     print("="*60 + "\n")
 
     try:
+        import importlib
         print("Importando rag.rag_module...")
-        from rag import rag_module
+        importlib.import_module("rag.rag_module")
         print(check_color("rag.rag_module importado com sucesso", "ok"))
 
         print("Importando rag.rag_config...")
-        from rag import rag_config
+        importlib.import_module("rag.rag_config")
         print(check_color("rag.rag_config importado com sucesso", "ok"))
 
         print("Verificando função create_rag_instance...")
@@ -253,6 +257,8 @@ def test_import_rag():
 
     except Exception as e:
         print(check_color(f"Erro ao importar módulos: {e}", "error"))
+        print(check_color("Dica: execute a partir da raiz do projeto ou rode: python -m rag.utils.check_rag_setup", "info"))
+        print(check_color("Alternativa: instalar o pacote localmente: python -m pip install -e .", "info"))
         return False
 
 
