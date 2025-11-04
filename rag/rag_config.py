@@ -1,6 +1,5 @@
 """
 Configurações do sistema RAG para VOXMAP
-Autor: Marcus Loreto
 """
 
 import os

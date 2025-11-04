@@ -1,177 +1,224 @@
 # VOXMAP
 
-Autor: Marcu Loreto
 
-Resumo
-- VOXMAP é uma aplicação Streamlit que atua como Assistente de Atendimento e Conciliação.
-- Usa OpenAI para gerar resumos, propostas de solução e próximos passos a partir de conversas.
-- Fornece análises auxiliares (sentimento, wordcloud, grafo) quando as bibliotecas correspondentes estão instaladas.
+## 📋 Sobre o Projeto
 
-Prerequisitos
-- Python 3.12
-- Git (opcional)
-- Docker & Docker Compose (opcional, recomendado para VPS)
-- Registro DNS apontando para sua VPS (se for usar domínio)
+VOXMAP é uma aplicação inteligente de Assistente de Atendimento e Conciliação que utiliza:
+- **Interface:** Streamlit para interface web interativa
+- **IA:** OpenAI para análise e geração de respostas
+- **RAG:** Sistema de busca semântica com Qdrant (banco vetorial)
+- **Análises:** Sentimento, nuvem de palavras e grafos de relacionamento
 
-Configuração de variáveis (arquivo .env)
-- Crie um arquivo `.env` na raiz com pelo menos:
-  OPENAI_API_KEY=seu_openai_key_aqui
-  OPENAI_MODEL=gpt-4.1-mini
-  OPENAI_TEMPERATURE=0.2
-  OPENAI_MAX_TOKENS=400
+---
 
-Instalar dependências e rodar no servidor (modo venv — Linux VPS)
-1. Entre na pasta do projeto:
-   cd /caminho/para/VOXMAP
+## 🔧 Pré-requisitos
 
-2. Criar e ativar virtualenv:
-   python -m venv .venv
-   source .venv/bin/activate
+- **Python 3.13.5 ou superior**
+- **Docker** (para visualização da interface do qdrant)
+- **Docker Compose** (opcional, recomendado para produção)
 
-3. Instalar dependências (requirements.txt deve estar em UTF-8 e com versões fixadas):
-   pip install --upgrade pip
-   pip install -r requirements.txt
+---
 
-4. Expor porta e rodar Streamlit (escuta em 0.0.0.0 para aceitar conexões externas):
-   export $(cat .env | xargs)   # carrega variáveis do .env no shell (opcional)
-   python -m streamlit run app/app_01.py --server.port 8501 --server.address 0.0.0.0 --server.headless true
+## ⚙️ Configuração Inicial
 
-Windows (PowerShell)
-1. No diretório do projeto:
-   python -m venv .venv
-   Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser -Force
-   .\.venv\Scripts\Activate.ps1
-2. Instalar dependências:
-   pip install --upgrade pip
-   pip install -r requirements.txt
-3. Rodar:
-   python -m streamlit run .\app\app_01.py --server.port 8501 --server.address 0.0.0.0 --server.headless true
+### 1. Arquivo de Variáveis de Ambiente
 
-Rodando via Docker Compose (recomendado para VPS)
-- Compose sem proxy (ex.: feeling.yaml)
-  docker compose -f feeling.yaml up --build -d
+Crie um arquivo `.env` na raiz do projeto:
 
-- Compose com nginx + Let's Encrypt (recomendado para domínio público)
-  docker compose -f feeling_proxy.yaml up --build -d
+```env
+# API OpenAI
+OPENAI_API_KEY=sua_chave_api_aqui
+OPENAI_MODEL=gpt-4o-mini
+OPENAI_TEMPERATURE=0.2
+OPENAI_MAX_TOKENS=400
+```
 
-Obs: coloque suas credenciais em `.env` (não commite o arquivo). No feeling_proxy.yaml o serviço usa VIRTUAL_HOST e LETSENCRYPT_HOST para geração automática de certificados.
+> ⚠️ **IMPORTANTE:** Nunca commite o arquivo `.env` no Git!
 
-Expor por domínio com Nginx (resumo)
-1. Configure DNS A apontando `www.feeling_check.etechats.com.br` para IP da VPS.
-2. Opção A (docker-proxy stack): use feeling_proxy.yaml (nginx-proxy + letsencrypt companion).
-3. Opção B (host Nginx): configure Nginx para proxy_pass para http://127.0.0.1:8501 e use Certbot:
-   sudo certbot --nginx -d www.feeling_check.etechats.com.br
+---
 
-Dicas e Troubleshooting
-- Verifique que `requirements.txt` está em UTF-8 e com versões fixadas compatíveis com Python 3.12.
-- Se Streamlit não inicia, confira logs:
-  docker compose -f feeling.yaml logs -f
-  ou, com venv, verifique a saída do terminal ao executar python -m streamlit run...
-- Para segurança em produção, rode o container mapeado para 127.0.0.1:8501 e use Nginx/Let's Encrypt para o TLS.
+## 🚀 Instalação e Execução
+##############################################################
+### Opção 1: Ambiente Local (Linux/Mac)
 
-Arquivos importantes
-- Dockerfile — imagem baseada em Python 3.12
-- feeling.yaml — docker-compose para app
-- feeling_proxy.yaml — docker-compose com nginx-proxy + letsencrypt
-- requirements.txt — dependências pinadas (UTF-8)
-- .env — variáveis de ambiente (NÃO comitar)
+```bash
+# 1. Clone o repositório (se necessário)
+git clone <seu-repositorio>
+cd Primeiro_Trabalho
 
-Autor
-- Marcu Loreto
+# 2. Crie e ative o ambiente virtual
+python -m venv .venv
+source .venv/bin/activate
 
-COMANDOS 
+# 3. Instale as dependências
+pip install --upgrade pip
+pip install -r requirements.txt
 
-APP
-Streamlit run app_01.py ( Roda a plicacao)
+# 4. Rodar Qdrant (interface visual) usando Docker, para acesso ao dashboard web. 
+# Para execução local, será necessário instalar o docker Desktop.
+# Após instalado e com o docker Descktop aberto, executar o seguinte comando para inicializar o container do qdrant:
+### No terminal:
+docker run -d --name qdrant-rag -p 6333:6333 -p 6334:6334 -v "$(pwd)/rag/qdrant_storage:/qdrant/storage" qdrant/qdrant:latest
 
-API
-Uvicorn maim:app --reload 0.0.0.0 --port 8000 (Acionar de dentro do folder app)
+# 5. Execute a aplicação Streamlit
+streamlit run app_01.py 
+```
 
-# VOXMAP
+###############################################################
+### Opção 2: Ambiente Local (Windows PowerShell)
 
-Autor: Marcu Loreto
+```powershell
+# 1. Navegue até o diretório do projeto
+cd "C:\Python Projects\pos-ufg\Primeiro_Trabalho"
 
-Resumo
-- VOXMAP é uma aplicação Streamlit que atua como Assistente de Atendimento e Conciliação.
-- Usa OpenAI para gerar resumos, propostas de solução e próximos passos a partir de conversas.
-- Fornece análises auxiliares (sentimento, wordcloud, grafo) quando as bibliotecas correspondentes estão instaladas.
+# 2. Crie e ative o ambiente virtual
+python -m venv .venv
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser -Force
+.\.venv\Scripts\Activate.ps1
 
-Prerequisitos
-- Python 3.12
-- Git (opcional)
-- Docker & Docker Compose (opcional, recomendado para VPS)
-- Registro DNS apontando para sua VPS (se for usar domínio)
+# 3. Instale as dependências
+pip install --upgrade pip
+pip install -r requirements.txt
 
-Configuração de variáveis (arquivo .env)
-- Crie um arquivo `.env` na raiz com pelo menos:
-  OPENAI_API_KEY=seu_openai_key_aqui
-  OPENAI_MODEL=gpt-4.1-mini
-  OPENAI_TEMPERATURE=0.2
-  OPENAI_MAX_TOKENS=400
+# 4. Rodar Qdrant (interface visual) usando Docker, para acesso ao dashboard web. 
+# Para execução local, será necessário instalar o docker Desktop.
+# Após instalado e com o docker Descktop aberto, executar o seguinte comando para inicializar o container do qdrant:
+### No terminal:
+docker run -d --name qdrant-rag -p 6333:6333 -p 6334:6334 -v "$(pwd)/rag/qdrant_storage:/qdrant/storage" qdrant/qdrant:latest
 
-Instalar dependências e rodar no servidor (modo venv — Linux VPS)
-1. Entre na pasta do projeto:
-   cd /caminho/para/VOXMAP
+# 5. Execute a aplicação Streamlit
+streamlit run app_01.py --server.port 8501 --server.address 0.0.0.0
+```
 
-2. Criar e ativar virtualenv:
-   python -m venv .venv
-   source .venv/bin/activate
+#################################################################
+### Opção 3: Docker (Recomendado para Produção)
 
-3. Instalar dependências (requirements.txt deve estar em UTF-8 e com versões fixadas):
-   pip install --upgrade pip
-   pip install -r requirements.txt
+```bash
+# Executar com Docker Compose
+docker compose up --build -d
 
-4. Expor porta e rodar Streamlit (escuta em 0.0.0.0 para aceitar conexões externas):
-   export $(cat .env | xargs)   # carrega variáveis do .env no shell (opcional)
-   python -m streamlit run app/app_01.py --server.port 8501 --server.address 0.0.0.0 --server.headless true
+# Verificar logs
+docker compose logs -f
 
-Windows (PowerShell)
-1. No diretório do projeto:
-   python -m venv .venv
-   Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser -Force
-   .\.venv\Scripts\Activate.ps1
-2. Instalar dependências:
-   pip install --upgrade pip
-   pip install -r requirements.txt
-3. Rodar:
-   python -m streamlit run .\app\app_01.py --server.port 8501 --server.address 0.0.0.0 --server.headless true
+# Parar a aplicação
+docker compose down
+```
 
-Rodando via Docker Compose (recomendado para VPS)
-- Compose sem proxy (ex.: feeling.yaml)
-  docker compose -f feeling.yaml up --build -d
+---
 
-- Compose com nginx + Let's Encrypt (recomendado para domínio público)
-  docker compose -f feeling_proxy.yaml up --build -d
+## 🌐 Acesso à Aplicação
 
-Obs: coloque suas credenciais em `.env` (não commite o arquivo). No feeling_proxy.yaml o serviço usa VIRTUAL_HOST e LETSENCRYPT_HOST para geração automática de certificados.
+Após iniciar, acesse no navegador:
+- **Local:** http://localhost:8501
+- **Rede:** http://seu-ip:8501
 
-Expor por domínio com Nginx (resumo)
-1. Configure DNS A apontando `www.feeling_check.etechats.com.br` para IP da VPS.
-2. Opção A (docker-proxy stack): use feeling_proxy.yaml (nginx-proxy + letsencrypt companion).
-3. Opção B (host Nginx): configure Nginx para proxy_pass para http://127.0.0.1:8501 e use Certbot:
-   sudo certbot --nginx -d www.feeling_check.etechats.com.br
+---
 
-Dicas e Troubleshooting
-- Verifique que `requirements.txt` está em UTF-8 e com versões fixadas compatíveis com Python 3.12.
-- Se Streamlit não inicia, confira logs:
-  docker compose -f feeling.yaml logs -f
-  ou, com venv, verifique a saída do terminal ao executar python -m streamlit run...
-- Para segurança em produção, rode o container mapeado para 127.0.0.1:8501 e use Nginx/Let's Encrypt para o TLS.
+## 📦 Estrutura do Projeto
 
-Arquivos importantes
-- Dockerfile — imagem baseada em Python 3.12
-- voxmap.yaml — docker-compose para app
-- voxmap_proxy.yaml — docker-compose com nginx-proxy + letsencrypt
-- requirements.txt — dependências pinadas (UTF-8)
-- .env — variáveis de ambiente (NÃO comitar)
+```
+Primeiro_Trabalho/
+├── app/
+│   └── app_01.py          # Aplicação principal Streamlit
+├── rag/                    # Módulo RAG (busca semântica)
+│   └── rag_module.py
+├── .env                    # Variáveis de ambiente (NÃO commitar)
+├── requirements.txt        # Dependências Python
+├── Dockerfile             # Configuração Docker
+└── docker-compose.yml     # Orquestração Docker
+```
 
-Autor
-- Marcu Loreto
+---
 
-COMANDOS 
+## 🔍 Comandos Úteis
 
-APP
-Streamlit run app_01.py ( Roda a plicacao)
+### Aplicação Streamlit
+```bash
+# Modo desenvolvimento
+streamlit run app_01.py
 
-API
-Uvicorn maim:app --reload 0.0.0.0 --port 8000 (Acionar de dentro do folder app)
+# Modo produção (aceita conexões externas)
+streamlit run app_01.py --server.port 8501 --server.address 0.0.0.0 --server.headless true
+```
+
+### API (se disponível)
+```bash
+# Entrar na pasta app e executar
+cd app
+uvicorn main:app --reload --host 0.0.0.0 --port 8000
+```
+
+---
+
+## 🛠️ Troubleshooting
+
+### Problema: Streamlit não inicia
+```bash
+# Verifique se as dependências estão instaladas
+pip list
+
+# Reinstale as dependências
+pip install -r requirements.txt --force-reinstall
+```
+
+### Problema: Erro de encoding no requirements.txt
+```bash
+# Certifique-se que o arquivo está em UTF-8
+# No Windows, abra no VS Code e salve como UTF-8
+```
+
+### Problema: Docker não conecta
+```bash
+# Verifique os logs
+docker compose logs -f
+
+# Reinicie os containers
+docker compose restart
+
+# Reconstrua a imagem
+docker compose up --build --force-recreate
+```
+
+### Problema: Porta 8501 em uso
+```bash
+# Linux/Mac - Encontre o processo
+lsof -i :8501
+
+# Windows - Encontre o processo
+netstat -ano | findstr :8501
+
+# Mate o processo ou use outra porta
+streamlit run app_01.py --server.port 8502
+```
+
+---
+
+## 📚 Dependências Principais
+
+| Biblioteca | Versão | Propósito |
+|-----------|--------|-----------|
+| streamlit | 1.50.0 | Interface web |
+| openai | 2.6.1 | API de IA |
+| qdrant-client | 1.15.1 | Banco vetorial |
+| sentence-transformers | 5.1.2 | Embeddings |
+| pandas | 2.3.3 | Análise de dados |
+| wordcloud | 1.9.4 | Visualizações |
+
+---
+
+## 📄 Licença
+
+Este projeto foi desenvolvido para fins acadêmicos na UFG.
+
+---
+
+Pós-graduação UFG
+
+---
+
+## 🆘 Suporte
+
+Para questões ou problemas:
+1. Verifique a seção de Troubleshooting
+2. Consulte a documentação das bibliotecas utilizadas
+3. Entre em contato com a equipe do projeto
