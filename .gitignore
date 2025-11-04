@@ -11,3 +11,6 @@ wheels/
 .env
 venv/   
 env/
+
+# Qdrant
+qdrant_storage/

@@ -29,10 +29,10 @@ chmod +x start-qdrant.sh
 
 ## Opção 2: Comando Manual (Docker Run)
 
-### Windows (CMD/PowerShell)
+### No terminal (powershell):
 
-```bash
-docker run -d --name qdrant-rag -p 6333:6333 -p 6334:6334 -v "%cd%/rag/qdrant_storage:/qdrant/storage" qdrant/qdrant:latest
+```bash 
+docker run -d `  --name qdrant-rag `  -p 6333:6333 `  -p 6334:6334 `  -v "${PWD}/rag/qdrant_storage:/qdrant/storage" `  qdrant/qdrant:latest
 ```
 
 ### Linux/Mac

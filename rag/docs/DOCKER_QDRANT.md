@@ -31,16 +31,13 @@ Se não tiver Docker instalado:
 
 **Comando único:**
 
-```bash
-docker run -d \
-  --name qdrant-rag \
-  -p 6333:6333 \
-  -p 6334:6334 \
-  -v "%cd%/qdrant_storage:/qdrant/storage" \
-  qdrant/qdrant:latest
+### No terminal:
+```bash 
+docker run -d --name qdrant-rag -p 6333:6333 -p 6334:6334 -v "$(pwd)/rag/qdrant_storage:/qdrant/storage" qdrant/qdrant:latest
 ```
 
-**comando no terminal:**
+## outra forma:
+**comando no terminal - substitua o endereço absoluto "C:\Python Projects\pos-ufg\" pelo o da sua máquina**
 ```bash 
 docker run -d --name qdrant-rag -p 6333:6333 -p 6334:6334 -v "C:\Python Projects\pos-ufg\Primeiro_Trabalho\rag\qdrant_storage:/qdrant/storage" qdrant/qdrant:latest
 ```
