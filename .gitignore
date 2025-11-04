@@ -11,3 +11,5 @@ wheels/
 .env
 venv/   
 env/
+node_modules/
+rag/qdrant_storage/
