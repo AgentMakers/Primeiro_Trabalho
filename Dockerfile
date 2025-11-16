@@ -17,10 +17,20 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 COPY requirements.txt /tmp/requirements.txt
 
 RUN python -m pip install --upgrade pip && \
-    cp /tmp/requirements.txt /tmp/requirements.fixed && \
-    dos2unix /tmp/requirements.fixed || true && \
-    sed -i '1s/^\xEF\xBB\xBF//' /tmp/requirements.fixed && \
-    pip install --no-cache-dir -r /tmp/requirements.fixed \
+     if [ -f /tmp/requirements.txt ]; then \
+       cp /tmp/requirements.txt /tmp/requirements.fixed && \
+       dos2unix /tmp/requirements.fixed || true && \
+       sed -i '1s/^\xEF\xBB\xBF//' /tmp/requirements.fixed && \
+     pip install --no-cache-dir -r /tmp/requirements.fixed; \
+     else \
+      pip install --no-cache-dir streamlit python-dotenv openai wordcloud networkx pyvis pillow qdrant-client; \
+   fi
+
+#RUN python -m pip install --upgrade pip && \
+    #cp /tmp/requirements.txt /tmp/requirements.fixed && \
+    #dos2unix /tmp/requirements.fixed || true && \
+    #sed -i '1s/^\xEF\xBB\xBF//' /tmp/requirements.fixed && \
+    #pip install --no-cache-dir -r /tmp/requirements.fixed \
 
 
 
