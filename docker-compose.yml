@@ -6,7 +6,7 @@ services:
     ports:
       - "6333:6333"  # REST API
       - "6334:6334"  # gRPC API
-      networks:
+    networks:
       - ragnet
     volumes:
       # Monta o diretório local de storage do Qdrant
