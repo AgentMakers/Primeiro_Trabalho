@@ -47,16 +47,29 @@ load_dotenv()
 # ╔════════════════════════════════════════════════════════════════╗
 # ║ MÓDULO RAG (OPCIONAL - PLUG AND PLAY)                          ║
 # ╚════════════════════════════════════════════════════════════════╝
+from qdrant_client import QdrantClient
+from qdrant_client.models import VectorParams, Distance
 
-_RAG_AVAILABLE = False
+qdrant = QdrantClient(
+    host=os.getenv("QDRANT_HOST", "qdrant"),
+    port=int(os.getenv("QDRANT_PORT", 6333))
+)
+
+if not qdrant.collection_exists("minha_collection"):
+    qdrant.create_collection(
+        collection_name="minha_collection",
+        vectors_config=VectorParams(size=1536, distance=Distance.COSINE)
+    )
+
+#_RAG_AVAILABLE = False
 #rag_instance = None
 
-try:
-    from rag.rag_module import create_rag_instance
-    from rag.rag_config import RAG_CONFIG, get_active_use_cases, format_rag_context
-    _RAG_AVAILABLE = True
-except ImportError:
-    RAG_CONFIG = {"enabled": False}
+#try:
+   # from rag.rag_module import create_rag_instance
+   # from rag.rag_config import RAG_CONFIG, get_active_use_cases, format_rag_context
+   # _RAG_AVAILABLE = True
+#except ImportError:
+   # RAG_CONFIG = {"enabled": False}
 
 
 # ╔════════════════════════════════════════════════════════════════╗
