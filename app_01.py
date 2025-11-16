@@ -47,19 +47,27 @@ load_dotenv()
 # ╔════════════════════════════════════════════════════════════════╗
 # ║ MÓDULO RAG (OPCIONAL - PLUG AND PLAY)                          ║
 # ╚════════════════════════════════════════════════════════════════╝
+
 from qdrant_client import QdrantClient
-from qdrant_client.models import VectorParams, Distance
 
-qdrant = QdrantClient(
-    host=os.getenv("QDRANT_HOST", "qdrant"),
-    port=int(os.getenv("QDRANT_PORT", 6333))
-)
+client = QdrantClient(host="qdrant", port=6333)
 
-if not qdrant.collection_exists("minha_collection"):
-    qdrant.create_collection(
-        collection_name="minha_collection",
-        vectors_config=VectorParams(size=1536, distance=Distance.COSINE)
-    )
+print(client.get_collections())
+
+
+# from qdrant_client import QdrantClient
+# from qdrant_client.models import VectorParams, Distance
+
+# qdrant = QdrantClient(
+#     host=os.getenv("QDRANT_HOST", "qdrant"),
+#     port=int(os.getenv("QDRANT_PORT", 6333))
+# )
+
+# if not qdrant.collection_exists("minha_collection"):
+#     qdrant.create_collection(
+#         collection_name="minha_collection",
+#         vectors_config=VectorParams(size=1536, distance=Distance.COSINE)
+#     )
 
 #_RAG_AVAILABLE = False
 #rag_instance = None
