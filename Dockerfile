@@ -20,7 +20,8 @@ RUN python -m pip install --upgrade pip && \
     cp /tmp/requirements.txt /tmp/requirements.fixed && \
     dos2unix /tmp/requirements.fixed || true && \
     sed -i '1s/^\xEF\xBB\xBF//' /tmp/requirements.fixed && \
-    pip install --no-cache-dir -r /tmp/requirements.fixed
+    pip install --no-cache-dir -r /tmp/requirements.fixed \
+    pip install qdrant-client
 
 COPY . /app
 
