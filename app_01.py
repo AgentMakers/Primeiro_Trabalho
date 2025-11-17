@@ -1,14 +1,19 @@
 # app.py
 import os
 import streamlit as st
+import streamlit.components.v1
 from dotenv import load_dotenv
 from streamlit.components.v1 import html as st_html
 from openai import OpenAI
 import json
-from pathlib import Path
 import re
 from io import BytesIO
 from collections import Counter
+import networkx as nx
+from itertools import combinations
+import qdrant_client
+from qdrant_client import QdrantClient
+from qdrant_client.http.models import Distance, VectorParams
 import base64
 
 # cleaned imports: SequenceMatcher and base64 are stdlib, network/pyvis/wordcloud optional
@@ -48,13 +53,34 @@ load_dotenv()
 # ╔════════════════════════════════════════════════════════════════╗
 # ║ MÓDULO RAG (OPCIONAL - PLUG AND PLAY)                          ║
 # ╚════════════════════════════════════════════════════════════════╝
-## teste para carregar o qdrant 
-import qdrant_client
-from qdrant_client import QdrantClient
-from qdrant_client.http.models import Distance, VectorParams
 
 def get_qdrant_client():
-    return QdrantClient(host="qdrant", port=6333)
+    # Configuração para diferentes ambientes
+    qdrant_host = os.getenv("QDRANT_HOST", "localhost")
+    qdrant_port = int(os.getenv("QDRANT_PORT", 6333))
+    
+    try:
+        # Tenta conectar com configuração do ambiente
+        client = QdrantClient(host=qdrant_host, port=qdrant_port)
+        # Testa a conexão
+        client.get_collections()
+        print(f"✅ Connected to Qdrant at {qdrant_host}:{qdrant_port}")
+        return client
+    except Exception as e:
+        print(f"❌ Failed to connect to Qdrant at {qdrant_host}:{qdrant_port}: {e}")
+        
+        # Fallback para localhost em desenvolvimento
+        if qdrant_host != "localhost":
+            try:
+                print("🔄 Trying fallback to localhost...")
+                client = QdrantClient(host="localhost", port=6333)
+                client.get_collections()
+                print("✅ Connected to Qdrant at localhost:6333")
+                return client
+            except Exception as fallback_error:
+                print(f"❌ Fallback also failed: {fallback_error}")
+        
+        raise Exception(f"Could not connect to Qdrant. Tried {qdrant_host}:{qdrant_port}")
 
 def ensure_qdrant_collection(client, collection_name="rag_collection", vector_size=768):
     collections = client.get_collections()
@@ -66,30 +92,11 @@ def ensure_qdrant_collection(client, collection_name="rag_collection", vector_si
 
 # Inicialização direta no Streamlit
 try:
-    client = get_qdrant_client()
-    ensure_qdrant_collection(client)
+    qdrant_client = get_qdrant_client()
+    ensure_qdrant_collection(qdrant_client)
 except Exception as e:
     st.sidebar.error(f"Erro ao inicializar Qdrant: {e}")
     st.stop()
-
-# E depois para consultar/exibir:
-docs = client.search(collection_name="rag_collection", query_vector=seu_vector)
-st.markdown("### Resultados RAG")
-for i, doc in enumerate(docs, 1):
-    st.markdown(f"**{i}.** {doc['payload']['text']}")
-
-
-# Supondo que 'client' esteja inicializado como QdrantClient
-query_vector = ...  # gerar o embedding/vetor da consulta do usuário
-docs = client.search(
-    collection_name="rag_collection",
-    query_vector=query_vector,
-    limit=3
-)
-st.markdown("### Resultados RAG")
-for i, doc in enumerate(docs, 1):
-    # Adapte o acesso ao texto conforme a estrutura retornada pelo Qdrant
-    st.markdown(f"**{i}.** {doc.payload['text']} (Score: {doc.score:.2f})")
 
 # ********####
 # from qdrant_client import QdrantClient
@@ -113,15 +120,49 @@ for i, doc in enumerate(docs, 1):
 #         vectors_config=VectorParams(size=1536, distance=Distance.COSINE)
 #     )
 
-#_RAG_AVAILABLE = False
-#rag_instance = None
+# Configuração RAG
+_RAG_AVAILABLE = False
+rag_instance = None
 
-#try:
-   # from rag.rag_module import create_rag_instance
-   # from rag.rag_config import RAG_CONFIG, get_active_use_cases, format_rag_context
-   # _RAG_AVAILABLE = True
-#except ImportError:
-   # RAG_CONFIG = {"enabled": False}
+try:
+    from rag.rag_module import create_rag_instance
+    from rag.rag_config import RAG_CONFIG, get_active_use_cases, format_rag_context
+    _RAG_AVAILABLE = True
+    print("✅ RAG modules imported successfully")
+except ImportError as e:
+    print(f"❌ RAG import failed: {e}")
+    RAG_CONFIG = {"enabled": False}
+    
+    # Funções stub para quando RAG não estiver disponível
+    def get_active_use_cases():
+        return []
+    
+    def format_rag_context(docs):
+        return ""
+except Exception as e:
+    print(f"❌ Unexpected error importing RAG: {e}")
+    _RAG_AVAILABLE = False
+    RAG_CONFIG = {"enabled": False}
+    
+    def get_active_use_cases():
+        return []
+    
+    def format_rag_context(docs):
+        return ""
+
+# Inicializa RAG se disponível
+if _RAG_AVAILABLE and RAG_CONFIG.get("enabled", False):
+    try:
+        print("🔧 Initializing RAG instance...")
+        rag_instance = create_rag_instance(
+            knowledge_base_dir=RAG_CONFIG.get("knowledge_base_dir", "./rag/base_conhecimento"),
+            verbose=False
+        )
+        print(f"✅ RAG initialized successfully with {rag_instance.count()} documents")
+    except Exception as e:
+        print(f"❌ Failed to initialize RAG: {e}")
+        rag_instance = None
+        _RAG_AVAILABLE = False
 
 
 # ╔════════════════════════════════════════════════════════════════╗
@@ -176,7 +217,7 @@ if not OPENAI_API_KEY:
     st.error("OPENAI_API_KEY não encontrada. Defina no ambiente (ex.: arquivo .env).")
     st.stop()
 
-client = OpenAI(api_key=OPENAI_API_KEY)
+openai_client = OpenAI(api_key=OPENAI_API_KEY)
 
 # def _is_nano(model_name: str) -> bool:
 #     return "nano" in (model_name or "").lower()
@@ -227,7 +268,7 @@ def call_llm(
         {"role": "user", "content": user_message},
     ]
 
-    resp = client.chat.completions.create(
+    resp = openai_client.chat.completions.create(
         model=model,
         messages=messages,
         # NÃO enviar temperature para nano
@@ -349,7 +390,7 @@ def _formatar_prompt_sentimento(texto: str) -> str:
 def analisar_sentimento(texto: str, modelo_sentimento: str):
     # Por que: mantemos consistência de qualidade centralizando no modelo.
     try:
-        resp = client.chat.completions.create(
+        resp = openai_client.chat.completions.create(
             model=modelo_sentimento,
             messages=[
                 {"role": "system", "content": "Retorne JSON estrito."},
@@ -533,8 +574,6 @@ def gerar_wordcloud(corpus_text: str, width: int = 450, height: int = 280):
 # ═══════════════════════════════════════════════════════
 # Grafo de Palavras (coocorrências por bigram em cada mensagem)
 # ═══════════════════════════════════════════════════════
-import networkx as nx
-from itertools import combinations
 
 
 def build_cooc_graph(
@@ -734,7 +773,6 @@ def show_grafo_modal():
         return
 
     # ⚠️ Fallback (sem modal): abrir em nova aba (link na sidebar)
-    import base64
 
     data_url = (
         "data:text/html;base64," + base64.b64encode(html.encode("utf-8")).decode()
@@ -993,7 +1031,7 @@ if mensagem_usuario:
                 # Obtém mensagens completas (inclui busca RAG)
                 messages = obter_mensagens_completas()
                 
-                resposta = client.chat.completions.create(
+                resposta = openai_client.chat.completions.create(
                     model=modelo,
                     messages=messages,
                     temperature=temperatura,
