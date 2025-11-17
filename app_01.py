@@ -193,6 +193,19 @@ st.markdown("### Resultados RAG")
 for i, doc in enumerate(docs, 1):
     st.markdown(f"**{i}.** {doc['payload']['text']}")
 
+
+# Supondo que 'client' esteja inicializado como QdrantClient
+query_vector = ...  # gerar o embedding/vetor da consulta do usuário
+docs = client.search(
+    collection_name="rag_collection",
+    query_vector=query_vector,
+    limit=3
+)
+st.markdown("### Resultados RAG")
+for i, doc in enumerate(docs, 1):
+    # Adapte o acesso ao texto conforme a estrutura retornada pelo Qdrant
+    st.markdown(f"**{i}.** {doc.payload['text']} (Score: {doc.score:.2f})")
+
 # ********####
 
 def call_llm(
