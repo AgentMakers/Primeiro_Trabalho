@@ -209,6 +209,29 @@ class QdrantRAG:
                     # Determina categoria pela estrutura de pastas
                     category = file.parent.name if file.parent.name != path.name else "geral"
 
+<<<<<<< Updated upstream
+=======
+#                     # Carrega conteúdo baseado na extensão
+#                     if file_type == '.txt':
+#                         content = self._load_txt(file)
+#                         if not content or len(content.strip()) < 20: # Reduzido para 20
+#                             if self.verbose:
+#                                 print(f"  ⊘ {file.name}: vazio ou muito curto, ignorado")
+#                             continue
+
+#                         # --- LÓGICA DE CHUNKING SEMÂNTICO PARA TXT ---
+#                         # Usamos '---' como separador, baseado na estrutura do seu documento
+#                         chunks_raw = content.split('PROBLEMA:')
+#                         # Limpa os chunks: remove espaços em branco no início/fim
+#                         chunks = [chunk.strip() for chunk in chunks_raw if chunk.strip()]
+#                         # Filtra chunks que são muito pequenos (ex: menos de 10 palavras)
+#                         chunks = [chunk for chunk in chunks if len(chunk.split()) > 10]
+#                         # --- FIM DA NOVA LÓGICA ---
+#                     import re
+# # ... (O restante do seu rag_module.py)
+
+# ... (Dentro da função load_documents, no bloco if file_type == '.txt':)
+>>>>>>> Stashed changes
                     if file_type == '.txt':
                         content = self._load_txt(file)
                         if not content or len(content.strip()) < 20:

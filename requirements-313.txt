@@ -1,0 +1,29 @@
+streamlit==1.50.0
+
+# LLM e API
+openai==2.6.1
+python-dotenv==1.1.1
+
+# Sistema RAG (Busca Semântica)
+qdrant-client==1.15.1
+sentence-transformers==5.1.2
+transformers>=4.44,<5
+# PyTorch CPU (troque por CUDA se usar GPU)
+torch>=2.5,<3
+
+PyPDF2==3.0.1
+
+# Visualizações
+wordcloud==1.9.4
+networkx==3.5
+pyvis==0.3.2
+matplotlib==3.10.7
+pillow==11.3.0
+
+# Análise de Dados
+pandas==2.3.3
+numpy==2.3.4
+scikit-learn==1.7.2
+
+# Infraestrutura (opcional)
+docker==7.1.0
