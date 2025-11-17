@@ -140,30 +140,60 @@ client = OpenAI(api_key=OPENAI_API_KEY)
 
 # SUGESTÃO DE CÓDIGO PARA CRIAR O CACHE:
 # CASO NÃO FUNCIONE, REMOVER ESSE TRECHO!!!
-@st.cache_resource
-def get_rag_instance():
-    """
-    Carrega a instância RAG uma única vez e a armazena em cache.
-    """
-    if not _RAG_AVAILABLE or not RAG_CONFIG.get("enabled", False):
-        return None
-    try:
-        # Este spinner só aparecerá na *primeira* carga do app
-        with st.spinner("🔧 Inicializando sistema RAG (cache)..."):
-            rag_instance = create_rag_instance(
-                knowledge_base_dir=RAG_CONFIG.get("knowledge_base_dir", "./base_conhecimento"),
-                verbose=False
-            )
-            return rag_instance
-    except Exception as e:
-        # Se falhar, mostrará o erro na sidebar
-        st.sidebar.error(f"Falha ao inicializar RAG: {e}")
-        return None
+# @st.cache_resource
+# def get_rag_instance():
+#     """
+#     Carrega a instância RAG uma única vez e a armazena em cache.
+#     """
+#     if not _RAG_AVAILABLE or not RAG_CONFIG.get("enabled", False):
+#         return None
+#     try:
+#         # Este spinner só aparecerá na *primeira* carga do app
+#         with st.spinner("🔧 Inicializando sistema RAG (cache)..."):
+#             rag_instance = create_rag_instance(
+#                 knowledge_base_dir=RAG_CONFIG.get("knowledge_base_dir", "./base_conhecimento"),
+#                 verbose=False
+#             )
+#             return rag_instance
+#     except Exception as e:
+#         # Se falhar, mostrará o erro na sidebar
+#         st.sidebar.error(f"Falha ao inicializar RAG: {e}")
+#         return None
 
-# Inicializa e obtém a instância RAG do cache
-rag_instance = get_rag_instance()
+# # Inicializa e obtém a instância RAG do cache
+# rag_instance = get_rag_instance()
 
+## teste para carregar o qdrant 
+import qdrant_client
+from qdrant_client import QdrantClient
+from qdrant_client.http.models import Distance, VectorParams
 
+def get_qdrant_client():
+    return QdrantClient(host="qdrant", port=6333)
+
+def ensure_qdrant_collection(client, collection_name="rag_collection", vector_size=768):
+    collections = client.get_collections()
+    if collection_name not in [c.name for c in collections.collections]:
+        client.create_collection(
+            collection_name=collection_name,
+            vectors_config=VectorParams(size=vector_size, distance=Distance.COSINE)
+        )
+
+# Inicialização direta no Streamlit
+try:
+    client = get_qdrant_client()
+    ensure_qdrant_collection(client)
+except Exception as e:
+    st.sidebar.error(f"Erro ao inicializar Qdrant: {e}")
+    st.stop()
+
+# E depois para consultar/exibir:
+docs = client.search(collection_name="rag_collection", query_vector=seu_vector)
+st.markdown("### Resultados RAG")
+for i, doc in enumerate(docs, 1):
+    st.markdown(f"**{i}.** {doc['payload']['text']}")
+
+# ********####
 
 def call_llm(
     user_message: str,
