@@ -1,6 +1,7 @@
-# Dockerfile otimizado para EasyPanel / builds que precisam compilar extensões nativas
+# Dockerfile otimizado para ambiente cloud/EasyPanel
 FROM python:3.12-slim
 
+# Variáveis de ambiente para produção
 ENV PYTHONUNBUFFERED=1 \
     PIP_NO_CACHE_DIR=1 \
     STREAMLIT_SERVER_HEADLESS=true \
@@ -14,52 +15,30 @@ ENV PYTHONUNBUFFERED=1 \
 
 WORKDIR /app
 
-# Instalar ferramentas de build e dependências do sistema necessárias para compilar wheels
-# Usamos um grupo "build-deps" para remover depois e minimizar imagem final.
+# Instalar dependências do sistema
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
     gcc \
-    g++ \
-    make \
-    pkg-config \
-    git \
     curl \
-    ca-certificates \
-    dos2unix \
-    # libs para Pillow, wordcloud, e similares:
     libfreetype6-dev \
     libpng-dev \
-    libjpeg-dev \
-    zlib1g-dev \
-    libwebp-dev \
-    libtiff5-dev \
-    # libs que podem ser necessárias por bindings nativos (opcional mas útil):
-    libglib2.0-0 \
     libgl1 \
-    # OpenSSL headers (p/ cryptography, etc.)
-    libssl-dev \
-    # Rust toolchain (algumas libs usam rust/cargo, ex: tokenizers)
-    cargo \
-  && rm -rf /var/lib/apt/lists/*
+    dos2unix \
+    ca-certificates \
+    && rm -rf /var/lib/apt/lists/* \
+    && apt-get clean
 
-# Copiar requirements (se existir)
+# Copiar e instalar dependências Python
 COPY requirements.txt /tmp/requirements.txt
 
-# Atualizar pip/setuptools/wheel, instalar dependências python
-RUN python -m pip install --upgrade pip setuptools wheel \
- && cp /tmp/requirements.txt /tmp/requirements.fixed \
- && dos2unix /tmp/requirements.fixed 2>/dev/null || true \
- && sed -i '1s/^\xEF\xBB\xBF//' /tmp/requirements.fixed \
- && pip install --no-cache-dir -r /tmp/requirements.fixed
-
-# LIMPEZA: remover caches e arquivos temporários de pip
-RUN rm -rf /tmp/requirements* \
- && pip cache purge || true
-
-# (Opcional) Se quiser reduzir mais a imagem, remover toolchain de build
-# *Cuidado*: se houver necessidade posterior de compilar algo em tempo de execução, não remova.
-RUN apt-get purge -y --auto-remove gcc g++ build-essential make pkg-config cargo \
- && rm -rf /var/lib/apt/lists/* || true
+# Instalar dependências Python com limpeza de arquivos
+RUN python -m pip install --upgrade pip \
+    && cp /tmp/requirements.txt /tmp/requirements.fixed \
+    && dos2unix /tmp/requirements.fixed 2>/dev/null || true \
+    && sed -i '1s/^\xEF\xBB\xBF//' /tmp/requirements.fixed \
+    && pip install --no-cache-dir -r /tmp/requirements.fixed \
+    && rm -rf /tmp/requirements* \
+    && pip cache purge
 
 # Copiar código da aplicação
 COPY . /app
@@ -70,10 +49,12 @@ RUN groupadd -r appuser && useradd -r -g appuser appuser \
 
 USER appuser
 
+# Expor porta
 EXPOSE 8501
 
-# Healthcheck simples (streamlit)
+# Healthcheck
 HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=3 \
-    CMD curl -f http://localhost:8501 || exit 1
+    CMD curl -f http://localhost:8501/_stcore/health || exit 1
 
+# Comando de inicialização
 CMD ["streamlit", "run", "app_01.py", "--server.port=8501", "--server.address=0.0.0.0", "--server.headless=true"]

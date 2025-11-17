@@ -1,28 +1,70 @@
+# .dockerignore - Arquivos a ignorar durante build Docker
+
+# Python
 __pycache__/
 *.pyc
 *.pyo
 *.pyd
+.Python
+pip-log.txt
+.tox
+.coverage
+.pytest_cache
+.mypy_cache
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+.DS_Store?
+._*
+Thumbs.db
+
+# Environment files (secrets)
+.env
+.env.local
+.env.production
+
+# Git
+.git/
+.gitignore
+.gitattributes
+
+# Logs e temporários
+*.log
 *.db
 *.sqlite
 *.sqlite3
-*.log
-.env
-venv/
-.venv/
-env/
-model/
-models/
-checkpoints/
-.data/
-dataset/
-datasets/
-cache/
-output/
-outputs/
 tmp/
 temp/
-.DS_Store
-.git/
-.gitignore
-.streamlit/
+cache/
+
+# Storage local (será volume Docker)
+qdrant_storage/
+.qdrant/
+
+# Build artifacts
+dist/
+build/
+*.egg-info/
+
+# Documentação e config
+README.md
+*.md
+docs/
 tests/
+.streamlit/
+
+# Docker
+docker-compose*
+Dockerfile*
