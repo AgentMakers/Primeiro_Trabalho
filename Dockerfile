@@ -1,7 +1,7 @@
-# Dockerfile otimizado para EasyPanel / cloud (Python 3.12)
+# Dockerfile final otimizado para EasyPanel (Python 3.12)
 FROM python:3.12-slim
 
-# Variáveis de ambiente
+# --------- Variáveis de ambiente ----------
 ENV PYTHONUNBUFFERED=1 \
     PIP_NO_CACHE_DIR=1 \
     STREAMLIT_SERVER_HEADLESS=true \
@@ -11,57 +11,86 @@ ENV PYTHONUNBUFFERED=1 \
     STREAMLIT_SERVER_ENABLEXSRF_PROTECTION=false \
     STREAMLIT_BROWSER_GATHERUSAGESTATS=false \
     QDRANT_HOST=qdrant \
-    QDRANT_PORT=6333
+    QDRANT_PORT=6333 \
+    # Definimos HOME antes de trocar de usuário
+    HOME=/home/appuser \
+    # Diretórios de cache (garantem que HF/transformers/matplotlib escrevam em local gravável)
+    HF_HOME=/home/appuser/.cache/huggingface \
+    TRANSFORMERS_CACHE=/home/appuser/.cache/huggingface/transformers \
+    TORCH_HOME=/home/appuser/.cache/torch \
+    MPLCONFIGDIR=/home/appuser/.config/matplotlib
 
 WORKDIR /app
 
-# Instalar dependências do SO
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    build-essential \
-    gcc \
-    curl \
-    ca-certificates \
-    libfreetype6-dev \
-    libpng-dev \
-    libgl1 \
-    && rm -rf /var/lib/apt/lists/*
+# --------- Instala dependências do sistema (inclui curl para healthcheck) ----------
+RUN set -eux; \
+    apt-get update; \
+    apt-get install -y --no-install-recommends \
+        build-essential \
+        gcc \
+        curl \
+        ca-certificates \
+        libfreetype6-dev \
+        libpng-dev \
+        libgl1 \
+    ; \
+    rm -rf /var/lib/apt/lists/*
 
-# Copiar requirements
+# Copia apenas requirements para aproveitar cache do docker
 COPY requirements.txt /tmp/requirements.txt
 
-# Normalizar e instalar requirements sem HEREDOC problemático
+# Normaliza requirements (remove BOM, converte CRLF -> LF) com script Python em bloco separado
 RUN python -m pip install --upgrade pip setuptools wheel && \
-    python - <<EOF
+    python - <<'PY'
 from pathlib import Path
 p = Path('/tmp/requirements.txt')
+if not p.exists():
+    raise SystemExit("requirements.txt not found in /tmp")
 b = p.read_bytes()
-# remove BOM
+# remove BOM se existir
 if b.startswith(b'\xef\xbb\xbf'):
     b = b[3:]
-# normaliza CRLF
+# normaliza CRLF -> LF
 b = b.replace(b'\r\n', b'\n')
 Path('/tmp/requirements.fixed').write_bytes(b)
-EOF
+PY
 
-RUN pip install --no-cache-dir -r /tmp/requirements.fixed && \
-    rm -rf /tmp/requirements* /root/.cache/pip && \
-    apt-get purge -y --auto-remove build-essential gcc || true && \
-    apt-get clean
+# Instala dependências Python (rodando como root), depois limpa caches e remove pacotes de build
+RUN set -eux; \
+    python -m pip install --no-cache-dir -r /tmp/requirements.fixed; \
+    rm -rf /tmp/requirements* /root/.cache/pip; \
+    # remover toolchain de build que não é necessário em runtime
+    apt-get purge -y --auto-remove build-essential gcc || true; \
+    rm -rf /var/lib/apt/lists/*; \
+    apt-get clean || true
 
-# Copiar aplicação
+# Copia a aplicação
 COPY . /app
 
-# Criar usuário não-root
-RUN groupadd -r appuser && useradd -r -g appuser appuser && \
-    chown -R appuser:appuser /app
+# Cria usuário não-root COM diretório HOME e diretórios de cache necessários, ajusta permissões
+RUN set -eux; \
+    # cria usuário com home
+    useradd -m -d /home/appuser -s /bin/bash appuser || true; \
+    # cria diretórios de cache e config para bibliotecas que precisam gravar
+    mkdir -p /home/appuser/.cache/huggingface /home/appuser/.cache/torch /home/appuser/.config/matplotlib; \
+    chown -R appuser:appuser /home/appuser /app; \
+    chmod -R 700 /home/appuser/.cache /home/appuser/.config || true
+
+# Definir variáveis de ambiente novamente para o shell do container (garante HOME ativo antes do USER)
+ENV HOME=/home/appuser \
+    HF_HOME=/home/appuser/.cache/huggingface \
+    TRANSFORMERS_CACHE=/home/appuser/.cache/huggingface/transformers \
+    TORCH_HOME=/home/appuser/.cache/torch \
+    MPLCONFIGDIR=/home/appuser/.config/matplotlib
 
 USER appuser
 
+# Porta usada pelo Streamlit
 EXPOSE 8501
 
-# Healthcheck
+# HEALTHCHECK (mantém curl instalado antes do purge)
 HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=3 \
-    CMD curl -f http://localhost:8501/_stcore/health || exit 1
+  CMD curl -f http://localhost:8501/_stcore/health || exit 1
 
-# Comando principal
+# Comando de inicialização (substitua app_01.py pelo entrypoint correto se necessário)
 CMD ["streamlit", "run", "app_01.py", "--server.port=8501", "--server.address=0.0.0.0", "--server.headless=true"]
