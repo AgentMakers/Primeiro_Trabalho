@@ -44,15 +44,59 @@ load_dotenv()
 
 # Para rodar o sistema: streamlit run bot.py
 
+
 # ╔════════════════════════════════════════════════════════════════╗
 # ║ MÓDULO RAG (OPCIONAL - PLUG AND PLAY)                          ║
 # ╚════════════════════════════════════════════════════════════════╝
-
+## teste para carregar o qdrant 
+import qdrant_client
 from qdrant_client import QdrantClient
+from qdrant_client.http.models import Distance, VectorParams
 
-client = QdrantClient(host="qdrant", port=6333)
+def get_qdrant_client():
+    return QdrantClient(host="qdrant", port=6333)
 
-print(client.get_collections())
+def ensure_qdrant_collection(client, collection_name="rag_collection", vector_size=768):
+    collections = client.get_collections()
+    if collection_name not in [c.name for c in collections.collections]:
+        client.create_collection(
+            collection_name=collection_name,
+            vectors_config=VectorParams(size=vector_size, distance=Distance.COSINE)
+        )
+
+# Inicialização direta no Streamlit
+try:
+    client = get_qdrant_client()
+    ensure_qdrant_collection(client)
+except Exception as e:
+    st.sidebar.error(f"Erro ao inicializar Qdrant: {e}")
+    st.stop()
+
+# E depois para consultar/exibir:
+docs = client.search(collection_name="rag_collection", query_vector=seu_vector)
+st.markdown("### Resultados RAG")
+for i, doc in enumerate(docs, 1):
+    st.markdown(f"**{i}.** {doc['payload']['text']}")
+
+
+# Supondo que 'client' esteja inicializado como QdrantClient
+query_vector = ...  # gerar o embedding/vetor da consulta do usuário
+docs = client.search(
+    collection_name="rag_collection",
+    query_vector=query_vector,
+    limit=3
+)
+st.markdown("### Resultados RAG")
+for i, doc in enumerate(docs, 1):
+    # Adapte o acesso ao texto conforme a estrutura retornada pelo Qdrant
+    st.markdown(f"**{i}.** {doc.payload['text']} (Score: {doc.score:.2f})")
+
+# ********####
+# from qdrant_client import QdrantClient
+
+# client = QdrantClient(host="qdrant", port=6333)
+
+# print(client.get_collections())
 
 
 # from qdrant_client import QdrantClient
@@ -163,50 +207,6 @@ client = OpenAI(api_key=OPENAI_API_KEY)
 # # Inicializa e obtém a instância RAG do cache
 # rag_instance = get_rag_instance()
 
-## teste para carregar o qdrant 
-import qdrant_client
-from qdrant_client import QdrantClient
-from qdrant_client.http.models import Distance, VectorParams
-
-def get_qdrant_client():
-    return QdrantClient(host="qdrant", port=6333)
-
-def ensure_qdrant_collection(client, collection_name="rag_collection", vector_size=768):
-    collections = client.get_collections()
-    if collection_name not in [c.name for c in collections.collections]:
-        client.create_collection(
-            collection_name=collection_name,
-            vectors_config=VectorParams(size=vector_size, distance=Distance.COSINE)
-        )
-
-# Inicialização direta no Streamlit
-try:
-    client = get_qdrant_client()
-    ensure_qdrant_collection(client)
-except Exception as e:
-    st.sidebar.error(f"Erro ao inicializar Qdrant: {e}")
-    st.stop()
-
-# E depois para consultar/exibir:
-docs = client.search(collection_name="rag_collection", query_vector=seu_vector)
-st.markdown("### Resultados RAG")
-for i, doc in enumerate(docs, 1):
-    st.markdown(f"**{i}.** {doc['payload']['text']}")
-
-
-# Supondo que 'client' esteja inicializado como QdrantClient
-query_vector = ...  # gerar o embedding/vetor da consulta do usuário
-docs = client.search(
-    collection_name="rag_collection",
-    query_vector=query_vector,
-    limit=3
-)
-st.markdown("### Resultados RAG")
-for i, doc in enumerate(docs, 1):
-    # Adapte o acesso ao texto conforme a estrutura retornada pelo Qdrant
-    st.markdown(f"**{i}.** {doc.payload['text']} (Score: {doc.score:.2f})")
-
-# ********####
 
 def call_llm(
     user_message: str,
