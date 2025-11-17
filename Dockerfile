@@ -15,65 +15,53 @@ ENV PYTHONUNBUFFERED=1 \
 
 WORKDIR /app
 
-# Instala runtime + temporariamente pacotes de build necessários
-# (manter 'curl' para HEALTHCHECK; 'libfreetype6-dev' e 'libpng-dev' para bibliotecas que compilam rozs)
-RUN set -eux; \
-    apt-get update; \
-    apt-get install -y --no-install-recommends \
-        build-essential \
-        gcc \
-        curl \
-        ca-certificates \
-        libfreetype6-dev \
-        libpng-dev \
-        libgl1 \
-    ; \
-    rm -rf /var/lib/apt/lists/*
+# Instalar dependências do SO
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    gcc \
+    curl \
+    ca-certificates \
+    libfreetype6-dev \
+    libpng-dev \
+    libgl1 \
+    && rm -rf /var/lib/apt/lists/*
 
-# Copia apenas requirements para aproveitar cache do docker
+# Copiar requirements
 COPY requirements.txt /tmp/requirements.txt
 
-# Normaliza requirements (remove BOM, converte CRLF -> LF) com um script Python portátil
-# e instala dependências; em seguida remove pacotes de build para uma imagem mais enxuta.
-RUN set -eux; \
-    python -m pip install --upgrade pip setuptools wheel; \
-    python - <<'PY'
+# Normalizar e instalar requirements sem HEREDOC problemático
+RUN python -m pip install --upgrade pip setuptools wheel && \
+    python - <<EOF
 from pathlib import Path
 p = Path('/tmp/requirements.txt')
-if not p.exists():
-    raise SystemExit("requirements.txt not found in /tmp")
 b = p.read_bytes()
+# remove BOM
 if b.startswith(b'\xef\xbb\xbf'):
     b = b[3:]
-# Normalize CRLF to LF
+# normaliza CRLF
 b = b.replace(b'\r\n', b'\n')
 Path('/tmp/requirements.fixed').write_bytes(b)
-PY
-    ; \
-    python -m pip install --no-cache-dir -r /tmp/requirements.fixed; \
-    # limpar arquivos temporários e cache do pip
-    rm -rf /tmp/requirements* /root/.cache/pip; \
-    # remover pacotes de build que não são necessários em runtime
-    apt-get purge -y --auto-remove build-essential gcc || true; \
-    rm -rf /var/lib/apt/lists/*; \
-    apt-get clean || true
+EOF
 
-# Copia o restante da aplicação
+RUN pip install --no-cache-dir -r /tmp/requirements.fixed && \
+    rm -rf /tmp/requirements* /root/.cache/pip && \
+    apt-get purge -y --auto-remove build-essential gcc || true && \
+    apt-get clean
+
+# Copiar aplicação
 COPY . /app
 
-# Cria usuário não-root (ajusta se seu app precisar de UID/GID específicos)
-RUN set -eux; \
-    groupadd -r appuser && useradd -r -g appuser appuser; \
+# Criar usuário não-root
+RUN groupadd -r appuser && useradd -r -g appuser appuser && \
     chown -R appuser:appuser /app
 
 USER appuser
 
 EXPOSE 8501
 
-# HEALTHCHECK (mantive o endpoint que você usava; se o caminho estiver diferente, ajuste)
+# Healthcheck
 HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=3 \
     CMD curl -f http://localhost:8501/_stcore/health || exit 1
 
-# Comando padrão: ajustei para streamlit como no seu Dockerfile original.
-# Substitua "app_01.py" pelo entrypoint correto da sua aplicação, se necessário.
+# Comando principal
 CMD ["streamlit", "run", "app_01.py", "--server.port=8501", "--server.address=0.0.0.0", "--server.headless=true"]
