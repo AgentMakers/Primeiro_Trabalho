@@ -39,7 +39,7 @@ docker run -d --name qdrant-rag -p 6333:6333 -p 6334:6334 -v "$(pwd)/rag/qdrant_
 ## outra forma:
 **comando no terminal - substitua o endereço absoluto "C:\Python Projects\pos-ufg\" pelo o da sua máquina**
 ```bash 
-docker run -d --name qdrant-rag -p 6333:6333 -p 6334:6334 -v "C:\Python Projects\pos-ufg\Primeiro_Trabalho\rag\qdrant_storage:/qdrant/storage" qdrant/qdrant:latest
+docker run -d --name qdrant-rag -p 6333:6333 -p 6334:6334 -v "$(pwd)/rag/qdrant_storage:/qdrant/storage" qdrant/qdrant:latest
 ```
 
 **No Windows PowerShell:**
