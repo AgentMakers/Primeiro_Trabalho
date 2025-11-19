@@ -1,4 +1,4 @@
-.import os
+import os
 import glob
 from pathlib import Path
 from typing import List, Dict, Optional
