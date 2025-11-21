@@ -91,16 +91,11 @@ class QdrantRAG:
                 if not content:
                     continue
 
-                # Extrai categoria do caminho (ex: suporte_tecnico/arquivo.txt -> suporte_tecnico)
-                relative_path = path.relative_to(base_path)
-                category = str(relative_path.parent.name) if relative_path.parent != Path('.') else "geral"
-                
                 docs.append(
                     {
                         "id": path.name,
                         "text": content,
-                        "source": str(relative_path),
-                        "category": category,
+                        "source": str(path.relative_to(base_path)),
                     }
                 )
             except Exception as e:
@@ -158,7 +153,7 @@ class QdrantRAG:
                     "id": doc["id"],
                     "text": doc["text"],
                     "source": doc.get("source", doc["id"]),
-                    "category": doc.get("category", "geral"),
+                    "category": "geral",
                     "file_type": "txt",
                     "chunk_index": 0,
                 }
@@ -189,17 +184,11 @@ class QdrantRAG:
         """
         query_emb = self.embedding_model.encode(query).tolist()
 
-        # Implementa filtro por categoria usando Qdrant Filter
+        # (category_filter não está sendo usado de fato, mas mantemos a assinatura)
         q_filter = None
         if category_filter:
-            q_filter = models.Filter(
-                must=[
-                    models.FieldCondition(
-                        key="category",
-                        match=models.MatchValue(value=category_filter)
-                    )
-                ]
-            )
+            # só para compat futura; por enquanto ignorado
+            pass
 
         results = self.client.search(
             collection_name=self.collection_name,
